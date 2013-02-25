@@ -16,22 +16,22 @@ else:
     jql = 'project=Example'
 
 keys = ['link', 'project', 'key', 'summary', 'type', 'priority', 'status', 'resolution', 'assignee', 'reporter', 'created', 
-	'updated', 'resolved', 'fixVersion']
+    'updated', 'resolved', 'fixVersion']
 custom_keys = ['Sprint', 'Scrum', 'Story Points','Epic/Theme']
 times = ['timeestimate', 'timeoriginalestimate', 'timespent']
 
 # TODO: Get this from config
-hostname = 'jira.splunk.com'
+hostname = 'jira.example.com'
 username = 'admin'
 password = 'changeme'
 count = 100
 offset = 0
 
 while True:
-	query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
-    request = urllib2.Request("https://%hostname/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query))
+    query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
+    request = urllib2.Request("https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query))
 
-    request.add_header('Authorization', "Basic %auth_hash" % base64.b64encode("%s:%s" % (username, password))
+    request.add_header('Authorization', "Basic %s" % base64.b64encode("%s:%s" % (username, password)))
     result = urllib2.urlopen(request)
 
     root = et.parse(result)
