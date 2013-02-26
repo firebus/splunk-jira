@@ -6,6 +6,7 @@ Usage:
 
 http://jira.example.com/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=<JQL>&tempMax=count&page/start=offset
 
+Author: Stephen Sorkin
 Author: Russell Uman
 """
 
