@@ -38,5 +38,6 @@ nosetests.xml
 
 # Splunk stuff
 
+bin/config.ini
 local
 metadata/local.meta

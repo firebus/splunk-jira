@@ -11,8 +11,10 @@ Author: Russell Uman
 """
 
 import base64
+import ConfigParser
 import datetime
 import lxml.etree as et
+import os
 import splunk.bundle as sb
 import splunk.mining.dcutils as dcu
 import splunk.Intersplunk as isp
@@ -29,27 +31,35 @@ offset = 0
 count = 100
 
 try:
-   conf_file = 'jira'
    namespace = settings.get("namespace", None)
    owner = settings.get("owner", None)
    sessionKey = settings.get("sessionKey", None)
-   stanza_name = 'jira'
 
-   conf = sb.getConf(conf_file, namespace=namespace, owner=owner, sessionKey=sessionKey)
-   stanza = conf.get(stanza_name)
+   splunk_conf = sb.getConf('jira', namespace=namespace, owner=owner, sessionKey=sessionKey)
+   stanza = splunk_conf.get('jira')
+
+   keys = stanza.get('keys', '').split(',')
+   time_keys = stanza.get('time_keys', '').split(',')
+   custom_keys = stanza.get('custom_keys', '').split(',')
 
 except Exception, e:
    logger.error(str(e))
    isp.addErrorMessage(messages, str(e))
    isp.outputResuts(results, messages)
 
-hostname = stanza.get('hostname')
-username = stanza.get('username')
-password = stanza.get('password')
+try:
+   local_conf = ConfigParser.ConfigParser()
+   location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+   local_conf.read(location + '/config.ini')
 
-keys = stanza.get('keys', '').split(',')
-time_keys = stanza.get('time_keys', '').split(',')
-custom_keys = stanza.get('custom_keys', '').split(',')
+   hostname = local_conf.get('jira', 'hostname')
+   username = local_conf.get('jira', 'username')
+   password = local_conf.get('jira', 'password')
+
+except Exception, e:
+   logger.error(str(e))
+   isp.addErrorMessage(messages, str(e))
+   isp.outputResuts(results, messages)
 
 if len(sys.argv) > 1:
    jql = sys.argv[1]
@@ -102,3 +112,5 @@ try:
          break
 except Exception, e:
    logger.error(str(e))
+   isp.addErrorMessage(messages, str(e))
+   isp.outputResuts(results, messages)

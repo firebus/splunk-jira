@@ -1,0 +1,4 @@
+[jira]
+hostname = jira.example.com
+username = admin
+password = changeme
