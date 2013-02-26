@@ -1,0 +1,7 @@
+[commands]
+access = read : [ * ], write : [ admin ]
+export = system
+
+[commands/jira]
+access = read : [ admin ], write : [ admin ]
+export = system

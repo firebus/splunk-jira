@@ -35,3 +35,8 @@ nosetests.xml
 
 # Backup files
 *~
+
+# Splunk stuff
+
+local
+metadata/local.meta
