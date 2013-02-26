@@ -31,7 +31,7 @@ offset = 0
 
 try:
    conf_file = 'jira'
-   namespace = 'jira'
+   namespace = settings.get("namespace", None)
    owner = settings.get("owner", None)
    sessionKey = settings.get("sessionKey", None)
    stanza_name = 'jira'
