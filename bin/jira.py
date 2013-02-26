@@ -47,9 +47,9 @@ hostname = stanza.get('hostname')
 username = stanza.get('username')
 password = stanza.get('password')
 
-keys = ['link', 'project', 'key', 'summary', 'type', 'priority', 'status', 'resolution', 'assignee', 'reporter', 'created', 'updated', 'resolved', 'fixVersion']
-time_keys = ['timeestimate', 'timeoriginalestimate', 'timespent']
-custom_keys = ['Sprint', 'Scrum', 'Story Points', 'Epic/Theme']
+keys = stanza.get('keys', '').split(',')
+time_keys = stanza.get('time_keys', '').split(',')
+custom_keys = stanza.get('custom_keys', '').split(',')
 
 if len(sys.argv) > 1:
    jql = sys.argv[1]
