@@ -3,7 +3,7 @@ JIRA App for Splunk
 
 This is a JIRA App for Splunk.
 
-It provides a jira search command that will send a JQL search to a JIRA instance, and return results in a splunk-friendly format
+It provides a 'jira' search command that will send a JQL search to a JIRA instance, and return results in a splunk-friendly format
 
 You can pipe the results generated into an index, or do whatever. See bin/jira.py for command documentation.
 
