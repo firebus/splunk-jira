@@ -25,9 +25,8 @@ results, dummyresults, settings = isp.getOrganizedResults()
 messages = {}
 logger = dcu.getLogger()
 
-keys = ['link', 'project', 'key', 'summary', 'type', 'priority', 'status', 'resolution', 'assignee', 'reporter', 'created', 'updated', 'resolved', 'fixVersion']
-times = ['timeestimate', 'timeoriginalestimate', 'timespent']
 offset = 0
+count = 100
 
 try:
    conf_file = 'jira'
@@ -44,11 +43,13 @@ except Exception, e:
    isp.addErrorMessage(messages, str(e))
    isp.outputResuts(results, messages)
 
-custom_keys = ['Sprint', 'Scrum', 'Story Points', 'Epic/Theme']
 hostname = stanza.get('hostname')
 username = stanza.get('username')
 password = stanza.get('password')
-count = stanza.get('count')
+
+keys = ['link', 'project', 'key', 'summary', 'type', 'priority', 'status', 'resolution', 'assignee', 'reporter', 'created', 'updated', 'resolved', 'fixVersion']
+time_keys = ['timeestimate', 'timeoriginalestimate', 'timespent']
+custom_keys = ['Sprint', 'Scrum', 'Story Points', 'Epic/Theme']
 
 if len(sys.argv) > 1:
    jql = sys.argv[1]
@@ -58,7 +59,9 @@ else:
 try:
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
-      request = urllib2.Request("https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query))
+      url = "https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query)
+      request = urllib2.Request(url)
+      logger.info(url)
 
       request.add_header('Authorization', "Basic %s" % base64.b64encode("%s:%s" % (username, password)))
       result = urllib2.urlopen(request)
@@ -69,9 +72,13 @@ try:
       added_count = 0
       for elem in root.iter('item'):
          added_count = added_count + 1
-         row = dict(map((lambda k: (k, elem.findtext(k))), keys))
-
-         for k in times:
+         row = {}
+         for k in keys:
+            v = elem.xpath(k)
+            if len(v) > 0:
+               row[k] = ",".join([val.text for val in v])
+         
+         for k in time_keys:
             v = elem.xpath(k)
             if len(v) == 1:
                row[k] = v[0].get("seconds")
