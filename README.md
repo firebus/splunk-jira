@@ -8,9 +8,9 @@ It provides a 'jira' search command that will send a JQL search to a JIRA instan
 See bin/jira.py for command documentation.
 
 To deploy the app
-# Create a folder named local, copy default/jira.conf into local, and update with configuration specific to your
-instance.
-# Copy config.ini.sample to config.ini and update with your authentication credentials
+
+1. Create a folder named local, copy default/jira.conf into local, and update with configuration specific to your instance.
+2. Copy config.ini.sample to config.ini and update with your authentication credentials
 
 Configure which keys to display in the table with the keys, time_keys, and custom_keys fields.
 
