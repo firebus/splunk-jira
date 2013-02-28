@@ -1,7 +1,7 @@
-JIRA App for Splunk
+JIRA Add-on for Splunk
 ===================
 
-This is a JIRA App for Splunk.
+This is a JIRA Add-on for Splunk.
 
 It provides a 'jira' search command that will send a JQL search to a JIRA instance, and return results as a table.
 

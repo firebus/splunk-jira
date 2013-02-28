@@ -39,5 +39,5 @@ nosetests.xml
 # Splunk stuff
 
 bin/config.ini
-local
+local/*
 metadata/local.meta

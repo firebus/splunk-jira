@@ -15,6 +15,7 @@ import ConfigParser
 import datetime
 import lxml.etree as et
 import os
+import re
 import splunk.bundle as sb
 import splunk.mining.dcutils as dcu
 import splunk.Intersplunk as isp
@@ -23,7 +24,6 @@ import time
 import urllib
 import urllib2
 
-results, dummyresults, settings = isp.getOrganizedResults()
 messages = {}
 logger = dcu.getLogger()
 
@@ -31,6 +31,7 @@ offset = 0
 count = 100
 
 try:
+   results, dummyresults, settings = isp.getOrganizedResults()
    namespace = settings.get("namespace", None)
    owner = settings.get("owner", None)
    sessionKey = settings.get("sessionKey", None)
@@ -83,6 +84,7 @@ try:
       for elem in root.iter('item'):
          added_count = added_count + 1
          row = {}
+
          for k in keys:
             v = elem.xpath(k)
             if len(v) > 0:
@@ -101,6 +103,13 @@ try:
             v = elem.xpath('customfields/customfield/customfieldvalues/label[../../customfieldname/text() = "%s"]' % k)
             if len(v) > 0:
                row[k] = ",".join([val.text for val in v])
+
+         # Add a _time field by converting updated into a timestamp. This is helpful if you're piping results to collect.
+         if 'updated' in keys:
+            updated = re.sub(r' (\+|-)\d+$', '', elem.findtext('updated')) 
+            timestamp = time.mktime(datetime.datetime.strptime(updated, "%a, %d %b %Y %H:%M:%S").timetuple())
+            row['_time'] = timestamp
+
          results.append(row)
          #print row
 
