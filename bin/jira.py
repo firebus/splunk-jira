@@ -1,10 +1,8 @@
 """
-External search command for querying a JIRA instance. 
+External search command for querying the JIRA REST API
 
 Usage:
   | jira "JQL query" | ... <other splunk commands here> ...
-
-http://jira.example.com/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=<JQL>&tempMax=count&page/start=offset
 
 Author: Stephen Sorkin
 Author: Russell Uman
@@ -24,42 +22,29 @@ import jiracommon
 import splunk.mining.dcutils as dcu
 import splunk.Intersplunk as isp
 
-results = {}
-messages = {}
-logger = dcu.getLogger()
-
-offset = 0
-count = 100
-
 try:
+   messages = {}
+   logger = dcu.getLogger()
+
+   offset = 0
+   count = 100
+
    splunk_conf = jiracommon.getSplunkConf()
    keys = splunk_conf.get('keys', '').split(',')
    time_keys = splunk_conf.get('time_keys', '').split(',')
    custom_keys = splunk_conf.get('custom_keys', '').split(',')
 
-except Exception, e:
-   logger.error(str(e))
-   isp.addErrorMessage(messages, str(e))
-   isp.outputResuts(results, messages)
-
-try:
    local_conf = jiracommon.getLocalConf()
 
    hostname = local_conf.get('jira', 'hostname')
    username = local_conf.get('jira', 'username')
    password = local_conf.get('jira', 'password')
 
-except Exception, e:
-   logger.error(str(e))
-   isp.addErrorMessage(messages, str(e))
-   isp.outputResuts(results, messages)
+   if len(sys.argv) > 1:
+      jql = sys.argv[1]
+   else:
+      jql = "project=%s" % stanza.get('default_project')
 
-if len(sys.argv) > 1:
-   jql = sys.argv[1]
-else:
-   jql = "project=%s" % stanza.get('default_project')
-
-try:
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
       url = "https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query)
@@ -102,8 +87,13 @@ try:
             timestamp = time.mktime(datetime.datetime.strptime(updated, "%a, %d %b %Y %H:%M:%S").timetuple())
             row['_time'] = timestamp
 
+         row['host'] = hostname
+         row['index'] = 'jira'
+         row['source'] = 'jql'
+         row['sourcetype'] = 'jira'
+         row['_raw']=row
+
          results.append(row)
-         #print row
 
       if added_count > 0:
          isp.outputResults(results)
@@ -111,7 +101,7 @@ try:
 
       if added_count < count:
          break
+
 except Exception, e:
-   logger.error(str(e))
-   isp.addErrorMessage(messages, str(e))
-   isp.outputResuts(results, messages)
+   logger.exception(str(e))
+   isp.generateErrorResults(str(e))

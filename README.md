@@ -3,19 +3,35 @@ JIRA Add-on for Splunk
 
 This is a JIRA Add-on for Splunk.
 
-It provides a 'jira' search command that will send a JQL search to a JIRA instance, and return results as a table.
+## Commands
 
-See bin/jira.py for command documentation.
+### jira (REST API)
 
-To deploy the app
+* Send a JQL query, return a table with one row for each result
+	* | jira "JQL query"
+
+### jira_soap (SOAP API)
+
+* List all filters available to the logged-in user
+	* | jirasoap filters
+* Run a filters
+	* | jirasoap issues <filter_id>
+* Run a text search
+    * | jirasoap search "foo bar bas"
+* Run a JQL search
+    * | jirasoap jqlsearch "project in (foo) AND status in (bar)
+    * jqlsearch does not parse JQL containing '=' very well, so please use 'in' instead, or use the REST API command, above
+
+## Deployment
 
 1. Place the app into $SPLUNK_HOME/etc/apps/jira
 2. Create a folder named local, copy default/jira.conf into local, and update with configuration specific to your instance.
 3. Copy config.ini.sample to config.ini and update with your authentication credentials
 
 Configure which keys to display in the table with the keys, time_keys, and custom_keys fields.
+* Note that the SOAP API command ignores the key configuration.
+
+## Thanks!
 
 Please open an issue if you have any trouble with the app, and please feel free to fork and make pull requests if you find a bug
 that you can fix or have an enhancement to add
-
-Thanks!

@@ -20,3 +20,19 @@ def getLocalConf():
    local_conf.read(location + '/config.ini')
 
    return local_conf
+
+def flatten(item, keys):
+   response = {}
+   for (key, replacer) in keys:
+      if not replacer:
+         response[key] = str(item[key])
+      else:
+         response[key] = replacer.get(item[key], item[key])
+
+   return response
+
+def api_to_dict(apidata):
+   dictdata = {}
+   for item in apidata:
+      dictdata[item['id']] = item['name']
+   return dictdata
