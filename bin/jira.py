@@ -1,5 +1,5 @@
 """
-External search command for querying the JIRA REST API
+External search command for querying the JIRA SearchRequest XML endpoint
 
 Usage:
   | jira "JQL query" | ... <other splunk commands here> ...

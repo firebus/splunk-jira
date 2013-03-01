@@ -5,7 +5,7 @@ This is a JIRA Add-on for Splunk.
 
 ## Commands
 
-### jira (REST API)
+### jira (SearchRequest XML)
 
 * Send a JQL query, return a table with one row for each result
 	* | jira "JQL query"
@@ -30,6 +30,12 @@ This is a JIRA Add-on for Splunk.
 
 Configure which keys to display in the table with the keys, time_keys, and custom_keys fields.
 * Note that the SOAP API command ignores the key configuration.
+
+## Acknowledgements
+
+* We're redistributing suds 4.0 https://fedorahosted.org/suds/
+* Original jira commands written by Stephen Sorkin, Jeffrey Isenberg, and Fred de Boer
+* MySQL app was used as a model, and lots of snippets here were stolen from its commands
 
 ## Thanks!
 

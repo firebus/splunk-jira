@@ -9,7 +9,7 @@ Usage:
 
 * The jqlsearch doesn't handle '=' very well - splunk parses these as options.
 Instead of saying "project = foo AND status = Open" say "project in (foo) AND status in (Open)".
-Or use the REST API command instead
+Or use the SearchRequest XML command instead
 
 Author: Fred de Boer
 Author: Jeffrey Isenberg
