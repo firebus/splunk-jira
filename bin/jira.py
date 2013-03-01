@@ -11,19 +11,20 @@ Author: Russell Uman
 """
 
 import base64
-import ConfigParser
 import datetime
 import lxml.etree as et
-import os
 import re
-import splunk.bundle as sb
-import splunk.mining.dcutils as dcu
-import splunk.Intersplunk as isp
 import sys
 import time
 import urllib
 import urllib2
 
+import jiracommon
+
+import splunk.mining.dcutils as dcu
+import splunk.Intersplunk as isp
+
+results = {}
 messages = {}
 logger = dcu.getLogger()
 
@@ -31,17 +32,10 @@ offset = 0
 count = 100
 
 try:
-   results, dummyresults, settings = isp.getOrganizedResults()
-   namespace = settings.get("namespace", None)
-   owner = settings.get("owner", None)
-   sessionKey = settings.get("sessionKey", None)
-
-   splunk_conf = sb.getConf('jira', namespace=namespace, owner=owner, sessionKey=sessionKey)
-   stanza = splunk_conf.get('jira')
-
-   keys = stanza.get('keys', '').split(',')
-   time_keys = stanza.get('time_keys', '').split(',')
-   custom_keys = stanza.get('custom_keys', '').split(',')
+   splunk_conf = jiracommon.getSplunkConf()
+   keys = splunk_conf.get('keys', '').split(',')
+   time_keys = splunk_conf.get('time_keys', '').split(',')
+   custom_keys = splunk_conf.get('custom_keys', '').split(',')
 
 except Exception, e:
    logger.error(str(e))
@@ -49,9 +43,7 @@ except Exception, e:
    isp.outputResuts(results, messages)
 
 try:
-   local_conf = ConfigParser.ConfigParser()
-   location = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-   local_conf.read(location + '/config.ini')
+   local_conf = jiracommon.getLocalConf()
 
    hostname = local_conf.get('jira', 'hostname')
    username = local_conf.get('jira', 'username')

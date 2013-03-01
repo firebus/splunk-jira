@@ -1,5 +1,5 @@
 JIRA Add-on for Splunk
-===================
+======================
 
 This is a JIRA Add-on for Splunk.
 
@@ -9,8 +9,9 @@ See bin/jira.py for command documentation.
 
 To deploy the app
 
-1. Create a folder named local, copy default/jira.conf into local, and update with configuration specific to your instance.
-2. Copy config.ini.sample to config.ini and update with your authentication credentials
+1. Place the app into $SPLUNK_HOME/etc/apps/jira
+2. Create a folder named local, copy default/jira.conf into local, and update with configuration specific to your instance.
+3. Copy config.ini.sample to config.ini and update with your authentication credentials
 
 Configure which keys to display in the table with the keys, time_keys, and custom_keys fields.
 
