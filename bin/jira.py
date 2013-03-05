@@ -91,7 +91,7 @@ try:
          row['index'] = 'jira'
          row['source'] = 'jql'
          row['sourcetype'] = 'jira'
-         row['_raw']=row
+         row['_raw'] = row
 
          results.append(row)
 

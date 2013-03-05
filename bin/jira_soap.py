@@ -56,8 +56,11 @@ try:
 
       results = []
       for filter in filters:
-         results.append(jiracommon.flatten(filter, keys))
-
+         row = jiracommon.flatten(filter, keys)
+         logger.info(time.time())
+         row['_time'] = int(time.time())
+         row['_raw'] = row
+         results.append(row)
       isp.outputResults(results)
       sys.exit(0)
 
@@ -99,7 +102,7 @@ try:
          if f['customfieldId'] == "customfield_10091":
             row['TargetRelease'] = f['values']
 
-      row['_time'] = row['updated']
+      row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
       row['host'] = hostname
       row['index'] = 'jira'
       row['source'] = keywords[1]
