@@ -23,7 +23,6 @@ import jiracommon
 import logging
 import sys
 import time
-import urllib
 
 from suds.client import Client
 
