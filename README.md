@@ -2,6 +2,8 @@ JIRA Add-on for Splunk
 ======================
 
 This is a JIRA Add-on for Splunk.
+* Download from http://www.gitub.com/firebus/splunk-jira
+* Upgoat at http://splunkbase.splunk.com/apps/JIRA
 
 ## Commands
 
@@ -45,5 +47,5 @@ Configure which keys to display in the table with the keys, time_keys, and custo
 
 ## Support
 
-Please open an issue if you have any trouble with the app, and please feel free to fork and make pull requests if you find a bug
-that you can fix or have an enhancement to add
+Please open an issue on github if you have any trouble with the app. 
+Please feel free to fork and make pull requests if you find a bug that you can fix or have an enhancement to add.
