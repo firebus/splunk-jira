@@ -45,6 +45,7 @@ try:
    else:
       jql = "project=%s" % stanza.get('default_project')
 
+   results = []
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
       url = "https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query)
@@ -56,7 +57,6 @@ try:
 
       root = et.parse(result)
 
-      results = []
       added_count = 0
       for elem in root.iter('item'):
          added_count = added_count + 1
@@ -96,12 +96,13 @@ try:
          results.append(row)
 
       if added_count > 0:
-         isp.outputResults(results)
          offset = offset + added_count
 
       if added_count < count:
          break
 
+   isp.outputResults(results)
+ 
 except Exception, e:
    logger.exception(str(e))
    isp.generateErrorResults(str(e))
