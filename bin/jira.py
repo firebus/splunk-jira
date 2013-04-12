@@ -46,6 +46,16 @@ try:
       jql = "project=%s" % stanza.get('default_project')
 
    results = []
+
+   header = ['_time']
+   for k in keys:
+      header.append(k)
+   for k in time_keys:
+      header.append(k)
+   for k in custom_keys:
+      header.append(k)
+   header.extend(['host', 'index', 'source', 'sourcetype', '_raw'])
+
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
       url = "https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query)
@@ -101,7 +111,7 @@ try:
       if added_count < count:
          break
 
-   isp.outputResults(results)
+   isp.outputResults(results, None, header)
  
 except Exception, e:
    logger.exception(str(e))
