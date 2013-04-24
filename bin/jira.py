@@ -43,7 +43,7 @@ try:
    if len(sys.argv) > 1:
       jql = sys.argv[1]
    else:
-      jql = "project=%s" % stanza.get('default_project')
+      jql = "project=%s" % splunk_conf.get('default_project')
 
    results = []
 
