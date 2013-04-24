@@ -26,13 +26,13 @@ try:
    messages = {}
    logger = dcu.getLogger()
 
-   offset = 0
-   count = 100
-
    splunk_conf = jiracommon.getSplunkConf()
    keys = splunk_conf.get('keys', '').split(',')
    time_keys = splunk_conf.get('time_keys', '').split(',')
    custom_keys = splunk_conf.get('custom_keys', '').split(',')
+
+   offset = 0
+   count = splunk_conf.get('tempMax', 1000)
 
    local_conf = jiracommon.getLocalConf()
 
