@@ -21,6 +21,7 @@ import splunk.mining.dcutils as dcu
 
 import jiracommon
 import logging
+import re
 import sys
 import time
 
@@ -107,6 +108,11 @@ try:
       row['source'] = keywords[1]
       row['sourcetype'] = 'jira_soap'
       row['_raw'] = row
+      # Cleanup fixVersions
+      # TODO: Handle multiple fixVersions
+      if re.match("[^\&]+name\s\=\s\"(.*)\"",str(row['fixVersions'])) is not None:
+         fixver=re.match("[^\&]+name\s\=\s\"(.*)\"",str(row['fixVersions']))
+         row['fixVersions']=fixver.group(1)
 
       results.append(row)
 
@@ -114,4 +120,4 @@ try:
 
 except Exception, e:
    logger.exception(str(e))
-   isp.generateErrorResults(str(e))
+   isp.generateErrorResults(str(e)) 
