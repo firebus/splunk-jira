@@ -24,8 +24,7 @@ This is a JIRA Add-on for Splunk.
 * Run a text search
 	* | jirasoap search "foo bar bas"
 * Run a JQL search
-	* | jirasoap jqlsearch "project in (foo) AND status in (bar)
-	* jqlsearch does not parse JQL containing '=' very well, so please use 'in' instead, or use the 'jira' command instead.
+	* | jirasoap jqlsearch "project = foo AND status in (bar, bas)"
 
 * jirasoap is a 'generating' command. There is also a prototype 'streaming' command available called 'jirasoapevents'. It creates
   real events instead of a table, but does not preserve anything streamed into it yet.
