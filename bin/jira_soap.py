@@ -21,7 +21,6 @@ import splunk.mining.dcutils as dcu
 
 import jiracommon
 import logging
-import re
 import sys
 import time
 
@@ -86,7 +85,6 @@ try:
           ('key', None),
           ('summary', None),
           ('reporter', None),
-          ('fixVersions', None),
           ('status', statuses),
           ('resolution', resolutions),
           ('priority', priorities),
@@ -96,6 +94,19 @@ try:
           ('updated', None))
    for issue in issues:
       row = jiracommon.flatten(issue, keys)
+
+      # Special handling for multi-value fields
+      affectedVersions = []
+      for f in issue['affectsVersions']:
+        versions.append(f['name'])
+      row['affectedVersions'] = affectedVersions
+
+      fixVersions = []
+      for f in issue['fixVersions']:
+         fixVersions.append(f['name'])
+      row['fixVersions'] = fixVersions
+
+      # Custom fields
       for f in issue['customFieldValues']:
          if f['customfieldId'] == "customfield_10020":
             row['SFDCcase'] = f['values']
@@ -108,11 +119,6 @@ try:
       row['source'] = keywords[1]
       row['sourcetype'] = 'jira_soap'
       row['_raw'] = row
-      # Cleanup fixVersions
-      # TODO: Handle multiple fixVersions
-      if re.match("[^\&]+name\s\=\s\"(.*)\"",str(row['fixVersions'])) is not None:
-         fixver=re.match("[^\&]+name\s\=\s\"(.*)\"",str(row['fixVersions']))
-         row['fixVersions']=fixver.group(1)
 
       results.append(row)
 
