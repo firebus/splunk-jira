@@ -95,7 +95,7 @@ try:
       # Special handling for multi-value fields
       affectedVersions = []
       for f in issue['affectsVersions']:
-        versions.append(f['name'])
+        affectedVersions.append(f['name'])
       row['affectedVersions'] = affectedVersions
 
       fixVersions = []
