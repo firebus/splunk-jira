@@ -43,12 +43,9 @@ try:
    client = Client(url)
    auth = client.service.login(username, password)
 
-   keywords, options = isp.getKeywordsAndOptions()
+   logger.info('argv: ' + str(sys.argv))
 
-   logger.info('keywords: ' + str(keywords))
-   logger.info('options: ' + str(options))
-
-   if keywords[0] == 'filters':
+   if sys.argv[1] == 'filters':
       filters =  client.service.getFavouriteFilters(auth)
 
       keys = (('author', None), ('id', None), ('name', None))
@@ -63,13 +60,13 @@ try:
       isp.outputResults(results)
       sys.exit(0)
 
-   if keywords[0] == 'issues':
-      issues = client.service.getIssuesFromFilter(auth, keywords[1])
+   if sys.argv[1] == 'issues':
+      issues = client.service.getIssuesFromFilter(auth, sys.argv[2])
    # TODO this 1000 issue max isn't working as expected - if there are more than 1000 results, no results are returned
-   elif keywords[0] == 'search':
-      issues = (client.service.getIssuesFromTextSearch(auth, keywords[1], 1000) )
-   elif keywords[0] == 'jqlsearch':
-      issues = (client.service.getIssuesFromJqlSearch(auth, keywords[1], 1000) )
+   elif sys.argv[1] == 'search':
+      issues = (client.service.getIssuesFromTextSearch(auth, sys.argv[2], 1000) )
+   elif sys.argv[1] == 'jqlsearch':
+      issues = (client.service.getIssuesFromJqlSearch(auth, sys.argv[2], 1000) )
 
    statuses = jiracommon.api_to_dict(client.service.getStatuses(auth))
    resolutions = jiracommon.api_to_dict(client.service.getResolutions(auth))
@@ -116,7 +113,7 @@ try:
       row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
       row['host'] = hostname
       row['index'] = 'jira'
-      row['source'] = keywords[1]
+      row['source'] = sys.argv[1]
       row['sourcetype'] = 'jira_soap'
       row['_raw'] = row
 
