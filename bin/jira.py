@@ -32,7 +32,7 @@ try:
    custom_keys = splunk_conf.get('custom_keys', '').split(',')
 
    offset = 0
-   count = splunk_conf.get('tempMax', 1000)
+   count = int(splunk_conf.get('tempMax', 1000))
 
    local_conf = jiracommon.getLocalConf()
 
