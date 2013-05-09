@@ -110,12 +110,13 @@ try:
          if f['customfieldId'] == "customfield_10091":
             row['TargetRelease'] = f['values']
 
-      row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
       row['host'] = hostname
       row['index'] = 'jira'
       row['source'] = sys.argv[1]
       row['sourcetype'] = 'jira_soap'
       row['_raw'] = row
+      #row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
+      row['_time'] = int(time.time())
 
       results.append(row)
 

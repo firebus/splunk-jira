@@ -13,7 +13,7 @@ This is a JIRA Add-on for Splunk.
 	* | jira "JQL query"
 
 * jira is a 'generating' command. There is also a prototype 'streaming' command available called 'jiraevents'. It creates real 
-  events instead of a table, but does not preserve anything streamed into it yet.
+  events instead of a table, but does not preserve anything streamed into it, yet.
 
 ### jirasoap (SOAP API)
 

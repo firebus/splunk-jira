@@ -104,16 +104,17 @@ try:
                row[k] = v[0].text
 
          # Add a _time field by converting updated into a timestamp. This is helpful if you're piping results to collect.
-         if 'updated' in keys:
-            updated = re.sub(r' (\+|-)\d+$', '', elem.findtext('updated')) 
-            timestamp = time.mktime(datetime.datetime.strptime(updated, "%a, %d %b %Y %H:%M:%S").timetuple())
-            row['_time'] = timestamp
+         # if 'updated' in keys:
+            #updated = re.sub(r' (\+|-)\d+$', '', elem.findtext('updated')) 
+            #timestamp = time.mktime(datetime.datetime.strptime(updated, "%a, %d %b %Y %H:%M:%S").timetuple())
+            #row['_time'] = timestamp
 
          row['host'] = hostname
          row['index'] = 'jira'
          row['source'] = 'jql'
          row['sourcetype'] = 'jira'
          row['_raw'] = row
+         row['_time'] = int(time.time())
 
          results.append(row)
 
