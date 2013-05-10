@@ -3,7 +3,7 @@ JIRA Add-on for Splunk
 
 This is a JIRA Add-on for Splunk.
 * Download from http://www.gitub.com/firebus/splunk-jira
-* Upgoat at http://splunkbase.splunk.com/apps/JIRA
+* Upgoat at http://splunk-base.splunk.com/apps/JIRA
 
 ## Commands
 
