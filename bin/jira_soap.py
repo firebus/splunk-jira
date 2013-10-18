@@ -32,13 +32,16 @@ try:
 
    logger = dcu.getLogger()
 
+   # Get configuration values from config.ini
    local_conf = jiracommon.getLocalConf()
 
    hostname = local_conf.get('jira', 'hostname')
    username = local_conf.get('jira', 'username')
    password = local_conf.get('jira', 'password')
+   protocol = local_conf.get('jira', 'soap_protocol');
+   port = local_conf.get('jira', 'soap_port');
 
-   url = "http://%s:8080/rpc/soap/jirasoapservice-v2?wsdl" % hostname
+   url = "%s://%s:%s/rpc/soap/jirasoapservice-v2?wsdl" % (protocol, hostname, port)
    logger.info(url)
    client = Client(url)
    auth = client.service.login(username, password)

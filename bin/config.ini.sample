@@ -2,3 +2,7 @@
 hostname = jira.example.com
 username = admin
 password = changeme
+jira_protocol = https
+jira_port = 443
+soap_protocol = https
+soap_port = 8080

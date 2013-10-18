@@ -26,7 +26,9 @@ try:
    messages = {}
    logger = dcu.getLogger()
 
+   # Get configuration values from jira.conf
    splunk_conf = jiracommon.getSplunkConf()
+
    keys = splunk_conf.get('keys', '').split(',')
    time_keys = splunk_conf.get('time_keys', '').split(',')
    custom_keys = splunk_conf.get('custom_keys', '').split(',')
@@ -34,11 +36,14 @@ try:
    offset = 0
    count = int(splunk_conf.get('tempMax', 1000))
 
+   # Get configuration values from config.ini
    local_conf = jiracommon.getLocalConf()
 
    hostname = local_conf.get('jira', 'hostname')
    username = local_conf.get('jira', 'username')
    password = local_conf.get('jira', 'password')
+   protocol = local_conf.get('jira', 'jira_protocol');
+   port = local_conf.get('jira', 'jira_port');
 
    if len(sys.argv) > 1:
       jql = sys.argv[1]
@@ -58,7 +63,8 @@ try:
 
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
-      url = "https://%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (hostname, query)
+
+      url = "%s://%s:%s/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?%s" % (protocol, hostname, port, query)
       request = urllib2.Request(url)
       logger.info(url)
 
