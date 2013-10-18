@@ -20,7 +20,7 @@ This is a JIRA Add-on for Splunk.
 * List all filters available to the logged-in user
 	* | jirasoap filters
 * Run a filters
-	* | jirasoap issues <filter_id>
+	* | jirasoap issues FILTER-ID
 * Run a text search
 	* | jirasoap search "foo bar bas"
 * Run a JQL search
