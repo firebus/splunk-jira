@@ -1,3 +1,4 @@
 bin/config.ini
 local/*
 metadata/local.meta
+*.pyc
