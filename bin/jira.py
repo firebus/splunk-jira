@@ -88,26 +88,30 @@ try:
                row[k] = v[0].text
          
          for k in time_keys:
-            v = elem.xpath(k)
-            if len(v) == 1:
-               row[k] = v[0].get("seconds")
+            # If time_keys is empty, then the split above results in ['']
+            if k:
+               v = elem.xpath(k)
+               if len(v) == 1:
+                  row[k] = v[0].get("seconds")
 
          for k in custom_keys:
-            v = elem.xpath('customfields/customfield/customfieldvalues/customfieldvalue[../../customfieldname/text() = "%s"]' % k)
-            if len(v) > 1:
-               row[k] = [val.text for val in v]
-               if '__mv_' + k not in header:
-                  header.append('__mv_' + k)
-            elif len(v) == 1:
-               row[k] = v[0].text
+            # If custom_keys is empty, then the split above results in ['']
+            if k:
+               v = elem.xpath('customfields/customfield/customfieldvalues/customfieldvalue[../../customfieldname/text() = "%s"]' % k)
+               if len(v) > 1:
+                  row[k] = [val.text for val in v]
+                  if '__mv_' + k not in header:
+                     header.append('__mv_' + k)
+               elif len(v) == 1:
+                  row[k] = v[0].text
 
-            v = elem.xpath('customfields/customfield/customfieldvalues/label[../../customfieldname/text() = "%s"]' % k)
-            if len(v) > 1:
-               row[k] = [val.text for val in v]
-               if '__mv_' + k not in header:
-                  header.append('__mv_' + k)
-            elif len(v) == 1:
-               row[k] = v[0].text
+               v = elem.xpath('customfields/customfield/customfieldvalues/label[../../customfieldname/text() = "%s"]' % k)
+               if len(v) > 1:
+                  row[k] = [val.text for val in v]
+                  if '__mv_' + k not in header:
+                     header.append('__mv_' + k)
+               elif len(v) == 1:
+                  row[k] = v[0].text
 
          # Add a _time field by converting updated into a timestamp. This is helpful if you're piping results to collect.
          # if 'updated' in keys:
