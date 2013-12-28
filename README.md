@@ -3,31 +3,73 @@ JIRA Add-on for Splunk
 
 This is a JIRA Add-on for Splunk.
 * Download from http://www.gitub.com/firebus/splunk-jira
-* Upgoat at http://splunk-base.splunk.com/apps/JIRA
+* Upgoat at http://apps.splunk.com/app/1438/
 
 ## Commands
 
 ### jira (SearchRequest XML)
 
-* Send a JQL query, return a table with one row for each result
-	* | jira "JQL query"
+#### Synopsis
 
-* jira is a 'generating' command. There is also a prototype 'streaming' command available called 'jiraevents'. It creates real 
-  events instead of a table, but does not preserve anything streamed into it, yet.
+Send a JQL query, return a table with one row for each result
+
+#### Syntax
+
+```
+| jira [time=TIME_OPTION] [JQL_QUERY]
+```
+
+#### Arguments
+
+* time
+  * *Syntax:* now | updated | created | resolved
+  * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native
+   timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the
+   unix epoch - January 1, 1970 00:00:00 GMT)
+* JQL_QUERY
+  * If omitted, search for all Issues in the default project
+
+#### Notes
+
+jira is a 'generating' command. There is also a prototype 'streaming' command available called 'jiraevents' with the same syntax.
+It creates real events instead of a table, but does not preserve anything streamed into it, yet.
 
 ### jirasoap (SOAP API)
 
-* List all filters available to the logged-in user
-	* | jirasoap filters
-* Run a filters
-	* | jirasoap issues FILTER-ID
-* Run a text search
-	* | jirasoap search "foo bar bas"
-* Run a JQL search
-	* | jirasoap jqlsearch "project = foo AND status in (bar, bas)"
+#### Syntax
 
-* jirasoap is a 'generating' command. There is also a prototype 'streaming' command available called 'jirasoapevents'. It creates
-  real events instead of a table, but does not preserve anything streamed into it yet.
+* List all filters available to the logged-in user
+```
+| jirasoap filters
+```
+
+* Run a filter
+```
+| jirasoap issues [time=TIME_OPTION] FILTER_ID
+```
+
+* Run a text search
+```
+| jirasoap search [time=TIME_OPTION] "foo bar bas"
+```
+
+* Run a JQL search
+```
+| jirasoap jqlsearch [time=TIME_OPTION] JQL_QUERY
+```
+
+#### Arguments
+
+* time
+  * *Syntax:* now | updated | created | resolved
+  * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native
+   timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the
+   unix epoch - January 1, 1970 00:00:00 GMT)
+
+#### Notes
+
+jirasoap is a 'generating' command. There is also a prototype 'streaming' command available called 'jirasoapevents' with the
+  same syntax. It creates real events instead of a table, but does not preserve anything streamed into it yet.
 
 ## Deployment
 

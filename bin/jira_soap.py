@@ -46,6 +46,10 @@ try:
    client = Client(url)
    auth = client.service.login(username, password)
 
+   keywords, argvals = isp.getKeywordsAndOptions()
+
+   time_option = argvals.get('time', "now")
+
    logger.info('argv: ' + str(sys.argv))
 
    if sys.argv[1] == 'filters':
@@ -62,14 +66,19 @@ try:
          results.append(row)
       isp.outputResults(results)
       sys.exit(0)
-
-   if sys.argv[1] == 'issues':
-      issues = client.service.getIssuesFromFilter(auth, sys.argv[2])
+   elif sys.argv[1] == 'issues':
+      filter_id = sys.argv[-1]
+      issues = client.service.getIssuesFromFilter(auth, filter_id)
    # TODO this 1000 issue max isn't working as expected - if there are more than 1000 results, no results are returned
    elif sys.argv[1] == 'search':
-      issues = (client.service.getIssuesFromTextSearch(auth, sys.argv[2], 1000) )
+      search = sys.argv[-1]
+      issues = (client.service.getIssuesFromTextSearch(auth, search, 1000) )
    elif sys.argv[1] == 'jqlsearch':
-      issues = (client.service.getIssuesFromJqlSearch(auth, sys.argv[2], 1000) )
+      jql = sys.argv[-1]
+      issues = (client.service.getIssuesFromJqlSearch(auth, jql, 1000) )
+   else:
+      logger.fatal('invalid command')
+      sys.exit(1)
 
    statuses = jiracommon.api_to_dict(client.service.getStatuses(auth))
    resolutions = jiracommon.api_to_dict(client.service.getResolutions(auth))
@@ -118,8 +127,12 @@ try:
       row['source'] = sys.argv[1]
       row['sourcetype'] = 'jira_soap'
       row['_raw'] = row
-      #row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
-      row['_time'] = int(time.time())
+
+      # override _time if time argument is set
+      if time_option == "now":
+         row['_time'] = int(time.time())
+      else:
+         row['_time'] = int(time.mktime(time.strptime(row[time_option], '%Y-%m-%d %H:%M:%S')))
 
       results.append(row)
 
