@@ -49,6 +49,7 @@ try:
       jql = sys.argv[1]
    else:
       jql = "project=%s" % splunk_conf.get('default_project')
+   logger.info('jql: %s' % jql)
 
    results = []
 
@@ -123,7 +124,7 @@ try:
          row['index'] = 'jira'
          row['source'] = 'jql'
          row['sourcetype'] = 'jira'
-         row['_raw'] = row
+         #row['_raw'] = ', '.join("%s=%r" % (key,val) for (key,val) in row.iteritems())
          row['_time'] = int(time.time())
 
          results.append(row)

@@ -117,10 +117,10 @@ try:
       row['index'] = 'jira'
       row['source'] = sys.argv[1]
       row['sourcetype'] = 'jira_soap'
-      row['_raw'] = row
+      #row['_raw'] = ', '.join("%s=%r" % (key,val) for (key,val) in row.iteritems())
       #row['_time'] = int(time.mktime(time.strptime(row['updated'], '%Y-%m-%d %H:%M:%S')))
       row['_time'] = int(time.time())
-
+      
       results.append(row)
 
    isp.outputResults(results)
