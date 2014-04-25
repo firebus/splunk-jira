@@ -2,6 +2,7 @@ JIRA Add-on for Splunk
 ======================
 
 This is a JIRA Add-on for Splunk.
+
 * Download from http://www.gitub.com/firebus/splunk-jira
 * Upgoat at http://apps.splunk.com/app/1438/
 
@@ -22,17 +23,15 @@ Send a JQL query, return a table with one row for each result
 #### Arguments
 
 * time
-  * *Syntax:* now | updated | created | resolved
-  * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native
-   timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the
-   unix epoch - January 1, 1970 00:00:00 GMT)
+    * *Syntax:* now | updated | created | resolved
+    * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the unix epoch - January 1, 1970 00:00:00 GMT)
 * JQL_QUERY
-  * If omitted, search for all Issues in the default project
+    * If omitted, search for all Issues in the default project
 
 #### Notes
 
-jira is a 'generating' command. There is also a prototype 'streaming' command available called 'jiraevents' with the same syntax.
-It creates real events instead of a table, but does not preserve anything streamed into it, yet.
+jira is a 'generating' command that produces a results table. It does not create events. There is also a prototype retainsevents version called 'jiraevents' with the same syntax.
+It creates real events instead of a table, but the events are empty so far...
 
 ### jirasoap (SOAP API)
 
@@ -61,15 +60,13 @@ It creates real events instead of a table, but does not preserve anything stream
 #### Arguments
 
 * time
-  * *Syntax:* now | updated | created | resolved
-  * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native
-   timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the
-   unix epoch - January 1, 1970 00:00:00 GMT)
+    * *Syntax:* now | updated | created | resolved
+    * *Description:* By default, _time is set to the current timestamp (now), but if you'd like to have _time reflect one of the native timefields on the issue, you can choose from updated, created, or resolved (if this field is empty, _time will be set to the unix epoch - January 1, 1970 00:00:00 GMT)
 
 #### Notes
 
-jirasoap is a 'generating' command. There is also a prototype 'streaming' command available called 'jirasoapevents' with the
-  same syntax. It creates real events instead of a table, but does not preserve anything streamed into it yet.
+jirasoap is a 'generating' command that produces a results table. It does not create events. There is also a prototype retainsevents version called 'jirasoapevents' with the same syntax.
+It creates real events instead of a table, but the events are empty so far...
 
 ## Deployment
 
@@ -78,6 +75,7 @@ jirasoap is a 'generating' command. There is also a prototype 'streaming' comman
 3. Copy config.ini.sample to config.ini and update with your authentication credentials
 
 Configure which keys to display in the table with the keys, time_keys, and custom_keys fields.
+
 * Note that the SOAP API command ignores the key configuration.
 
 ## Acknowledgements
