@@ -88,7 +88,6 @@ try:
 
    results = []
 
-   # TODO get keys from configuration
    keys = (('assignee', None),
           ('description', None),
           ('key', None),
