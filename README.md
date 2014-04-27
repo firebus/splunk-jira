@@ -30,7 +30,7 @@ This is a JIRA Add-on for Splunk.
 
 * Run a JQL search and return Issues.
 ```
-| jirarest jqlquery JQL_QUERY
+| jirarest jqlsearch JQL_QUERY
 ```
 
 * Run a JQL search and return the change history for all matching Issues.
@@ -42,18 +42,19 @@ This is a JIRA Add-on for Splunk.
 ```
 | jirarest rapidboards [list|all|RAPIDBOARD_ID]
 ```
-  * list will list rapidboards.
+  * list will list rapidboards. This is the default behavior.
   * all will list all sprints in all rapidboards.
   * RAPIDBOARD_ID will list all sprints in that rapidboard.
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
 * Pipe search results into a jqlquery
 ```
-| search ... | jirarest batch JQL_QUERY
+| search ... | eval foo="WTF-1,WTF-2,WTF-3" | makemv delim=, foo | map search="|jirarest batch JQL_QUERY_IN $foo$"
 ```
   * The JQL_QUERY in the batch command is a partial query that ends with the IN keyword.
   * Results piped in from the preceding search will populate the IN clause.
   * Results piped in can be comma- or space- separated
+  * This is a little ungainly, but quite powerful if you want to pull a list of JIRA keys from an external source and then search them all in JIRA
 
 #### Options
 
@@ -67,11 +68,19 @@ This is a JIRA Add-on for Splunk.
 
 * changetime TIME_FIELD
    * Sets _time to the chosen field. If field does not contain a valid, returns 0 Epoch time
+   * _time defaults to created if changetime is not set
    * Compatible with issues, jqlquery, and batch commands.
+
+* fields [INTERNAL_FIELD_NAME,...]
+   * Limits the set of fields returned
+   * Takes a comma-separated list of internal field names. No extra spaces, we're too lazy to trim
+   * key and created are always returned
 
 #### Notes
 
 * The rest command can also be called with | jira. 
+* Multi-value custom fields are not currently supported (I think we'll just return the first value)
+* This command doesn't work yet, but will by the time we merge the branch
 
 ### jirasoap (SOAP API - deprecated)
 

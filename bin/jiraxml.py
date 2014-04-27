@@ -142,7 +142,7 @@ try:
          row['host'] = hostname
          row['index'] = 'jira'
          row['source'] = 'jql'
-         row['sourcetype'] = 'jira'
+         row['sourcetype'] = 'jira_xml'
          #row['_raw'] = ', '.join("%s=%r" % (key,val) for (key,val) in row.iteritems())
 
          results.append(row)
