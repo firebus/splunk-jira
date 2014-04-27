@@ -1,9 +1,11 @@
 Change Log
 ==========
 
-## HEAD
+## 2.0
 
-* Rename jira and jiraevents commands to jiraxml and jiraxmlevents respectively
+* Add jirarest command and documentation
+* Rename jira and jiraevents commands to jiraxml and jiraxmlevents respectively - "| jira" is now an alias of jirarest
+* jiraxml and jirasoap commands are now deprecated, and will not be further developed (but pull requests are still accepted if there's something you need to have fixed!)
 
 ## 1.11
 
