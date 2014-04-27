@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+## HEAD
+
+* Rename jira and jiraevents commands to jiraxml and jiraxmlevents respectively
+
 ## 1.11
 
 * Remove _raw field as it was misformatted, and made it impossible to collect results in a summary index

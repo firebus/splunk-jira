@@ -8,7 +8,7 @@ This is a JIRA Add-on for Splunk.
 
 ## Commands
 
-### jira (SearchRequest XML)
+### jiraxml (SearchRequest XML)
 
 #### Synopsis
 
@@ -30,7 +30,7 @@ Send a JQL query, return a table with one row for each result
 
 #### Notes
 
-jira is a 'generating' command that produces a results table. It does not create events. There is also a prototype retainsevents version called 'jiraevents' with the same syntax.
+jiraxml is a 'generating' command that produces a results table. It does not create events. There is also a prototype retainsevents version called 'jiraxmlevents' with the same syntax.
 It creates real events instead of a table, but the events are empty so far...
 
 ### jirasoap (SOAP API)
@@ -81,10 +81,11 @@ Configure which keys to display in the table with the keys, time_keys, and custo
 ## Acknowledgements
 
 * We're redistributing suds 4.0 https://fedorahosted.org/suds/
-* Original jira commands written by Stephen Sorkin, Jeffrey Isenberg, and Fred de Boer
-* MySQL app was used as a model, and lots of snippets here were stolen from its commands
+* jiraxml command written by Stephen Sorkin and Jeffrey Isenberg
+* jirasoap command written by Fred de Boer
+* The Splunk MySQL app was used as a model, and lots of snippets here were stolen from its commands
 
 ## Support
 
-Please open an issue on github if you have any trouble with the app. 
+Please open an issue on github if you have any trouble with the app, or contact the maintainer on apps.splunk.com 
 Please feel free to fork and make pull requests if you find a bug that you can fix or have an enhancement to add.
