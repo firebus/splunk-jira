@@ -352,9 +352,12 @@ def main(changefield,comments,timestamp):
                                        linkedtypemv.append(mvfield1['type']['inward']+"-"+mvfield1[mvfield2][mvfield3])
                                     if mvfield2=="outwardIssue":
                                        linkedtypemv.append(mvfield1['type']['outward']+"-"+mvfield1[mvfield2][mvfield3])
-                                    linkedsummarymv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['summary'])
-                                    linkedstatusmv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['status']['name'])
-                                    linkedprioritymv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['priority']['name'])
+                                    if 'summary' in mvfield1[mvfield2]['fields']:
+                                      linkedsummarymv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['summary'])
+                                    if 'status' in mvfield1[mvfield2]['fields']:
+                                       linkedstatusmv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['status']['name'])
+                                    if 'priority' in mvfield1[mvfield2]['fields']:
+                                       linkedprioritymv.append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['priority']['name'])
            else:
               row[field]=str(issue['fields'][jirafield])
        
