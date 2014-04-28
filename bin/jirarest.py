@@ -1,21 +1,35 @@
-import splunk.Intersplunk
-import time
-import urllib2
+import base64
+import collections
+import json
 import re
 import splunk.clilib.cli_common as spcli
-import base64
-import json
-import urllib
+import splunk.Intersplunk
 import sys
-import collections
+import time
+import urllib2
+import urllib
+
+import jiracommon
 
 row={}
 results=[]
 keywords, options = splunk.Intersplunk.getKeywordsAndOptions()
-creds = spcli.getConfStanza("jirauser", "jirauser")
-auth = creds['user'] + ":" + creds['pass']
+
+# Get configuration values from config.ini
+local_conf = jiracommon.getLocalConf()
+
+# Set up authentication variables
+username = local_conf.get('jira', 'username')
+password = local_conf.get('jira', 'password')
+auth = username + ':' + password
 authencode = base64.b64encode(auth)
-jiraserver=creds['jiraserver']
+
+# Set up URL prefix
+hostname = local_conf.get('jira', 'hostname')
+protocol = local_conf.get('jira', 'jira_protocol')
+port = local_conf.get('jira', 'jira_port')
+jiraserver = protocol + '://' + hostname + ':' + port
+
 pattern = '%Y-%m-%dT%H:%M:%S'
 datepattern = "(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"
 datevalues = re.compile(datepattern)
