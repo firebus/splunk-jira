@@ -141,8 +141,8 @@ if option == 'rapidboards':
             results.append(row)
             row = {}
             rbamv = []
-       splunk.Intersplunk.outputStreamResults(results)
-       results = []
+      splunk.Intersplunk.outputStreamResults(results)
+      results = []
    exit()
 
 # changelog
@@ -409,7 +409,7 @@ def main(changefield,comments,timestamp):
                               if 'status' in mvfield1[mvfield2]:
                                  try:
                                     row[field+'_status'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['status']['name'])
-                                except:
+                                 except:
                                     row[field+'_status']=[]
                                     row[field+'_status'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['status']['name'])
                               if 'priority' in mvfield1[mvfield2]:
