@@ -15,6 +15,7 @@ keywords, options = splunk.Intersplunk.getKeywordsAndOptions()
 creds = spcli.getConfStanza("jirauser", "jirauser")
 auth = creds['user'] + ":" + creds['pass']
 authencode = base64.b64encode(auth)
+jiraserver=creds['jiraserver']
 pattern = '%Y-%m-%dT%H:%M:%S'
 datepattern = "(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})"
 datevalues = re.compile(datepattern)
@@ -22,7 +23,7 @@ option = sys.argv[1]
 
 # filters
 if option == 'filters':
-    target = "https://jira.splunk.com/rest/api/2/filter/favourite?expand"
+    target = jiraserver + "/rest/api/2/filter/favourite?expand"
     reqf = urllib2.Request(target)
     reqf.add_header('Content-Type', 'application/json; charset=utf-8')
     reqf.add_header('Authorization', 'Basic '+authencode )
@@ -46,11 +47,11 @@ if option == 'filters':
 if option == 'rapidboards':
    args = sys.argv[2]
    if args == "all":
-     target = "https://jira.splunk.com/rest/greenhopper/1.0/rapidviews/list"
+     target = jiraserver + "/rest/greenhopper/1.0/rapidviews/list"
    elif args == "list":
-     target = "https://jira.splunk.com/rest/greenhopper/1.0/rapidview"
+     target = jiraserver + "/rest/greenhopper/1.0/rapidview"
    else:
-     target = "https://jira.splunk.com/rest/greenhopper/1.0/rapidview/"+args
+     target = jiraserver + "/rest/greenhopper/1.0/rapidview/"+args
    reqrb = urllib2.Request(target)
    reqrb.add_header('Content-Type', 'application/json; charset=utf-8')
    reqrb.add_header('Authorization', 'Basic '+authencode )
@@ -73,7 +74,7 @@ if option == 'rapidboards':
        splunk.Intersplunk.outputStreamResults(results)
        results = []
        exit()
-     target2 = "https://jira.splunk.com/rest/greenhopper/1.0/sprintquery/"+str(rapidboards['id'])+"?includeHistoricSprints=true&includeFutureSprints=true"
+     target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/"+str(rapidboards['id'])+"?includeHistoricSprints=true&includeFutureSprints=true"
      reqsp = urllib2.Request(target2)
      reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
      reqsp.add_header('Authorization', 'Basic ' + authencode )
@@ -97,7 +98,7 @@ if option == 'rapidboards':
         results = []
    else:
      for view in rapidboards['views']:
-      target2 = "https://jira.splunk.com/rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
+      target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
       reqsp = urllib2.Request(target2)
       reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
       reqsp.add_header('Authorization', 'Basic '+authencode )
@@ -135,7 +136,7 @@ if option == 'rapidboards':
 
 # changelog
 if option == 'changelog':
-   target = "https://jira.splunk.com/rest/api/2/search?jql="
+   target = jiraserver + "/rest/api/2/search?jql="
    args=sys.argv[2].split()
    querystring = '+'.join(args)
    clfieldmv = []
@@ -223,7 +224,7 @@ def main(changefield,comments,timestamp):
         args=sys.argv[2].split()
         if len(sys.argv) > 3 and "fields" in sys.argv[3:]:
            fields="&fields=key,id,created," + sys.argv[sys.argv.index('fields') + 1]
-        target = "https://jira.splunk.com/rest/api/2/search?jql="
+        target = jiraserver + "/rest/api/2/search?jql="
         querystring = '+'.join(args)
         if comments == True:
           req = urllib2.Request(target+querystring+"&maxResults=10000&fields=key"+offset+"&validateQuery=false")
@@ -239,7 +240,7 @@ def main(changefield,comments,timestamp):
         batchargs = re.sub(',',' ',batchargs)
         batchargs = batchargs.split()
         batchargs = ','.join(batchargs)
-        target = "https://jira.splunk.com/rest/api/2/search?jql="
+        target = jiraserver + "/rest/api/2/search?jql="
         querystring = '+'.join(args) + "("+batchargs+")"
         if comments == True:
           req = urllib2.Request(target + querystring + "&maxResults=10000&fields=key" + offset + "&validateQuery=false")
@@ -251,13 +252,13 @@ def main(changefield,comments,timestamp):
         args=sys.argv[2]
         if len(sys.argv) > 3 and "fields" in sys.argv[3:]:
            fields = "&fields=key,id,created," + sys.argv[sys.argv.index('fields') + 1]
-        target = "https://jira.splunk.com/rest/api/2/search?jql=filter=" + args
+        target = jiraserver + "/rest/api/2/search?jql=filter=" + args
         if comments == True:
           req = urllib2.Request(target + "&maxResults=10000&fields=key" + offset + "&validateQuery=false")
         else:
            req = urllib2.Request(target + "&maxResults=10000" + fields + offset + "&validateQuery=false")
 
-    fieldtarget = "https://jira.splunk.com/rest/api/2/field"
+    fieldtarget = jiraserver + "/rest/api/2/field"
     fieldreq = urllib2.Request(fieldtarget)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     fieldreq.add_header('Content-Type', 'application/json; charset=utf-8')
@@ -271,7 +272,7 @@ def main(changefield,comments,timestamp):
     # comments
     if comments == True:
       for issue in full2['issues']:
-           commenttarget = "https://jira.splunk.com/rest/api/2/issue/" + issue['key'] + "/comment"
+           commenttarget = jiraserver + "/rest/api/2/issue/" + issue['key'] + "/comment"
            reqc = urllib2.Request(commenttarget)
            reqc.add_header('Content-Type', 'application/json; charset=utf-8')
            reqc.add_header('Authorization', 'Basic '+authencode )
