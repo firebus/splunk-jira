@@ -18,7 +18,7 @@ This is a JIRA Add-on for Splunk.
 
 #### Commands
 
-* List all filters available to the logged-in user.
+* List filters created by the configured user
 ```
 | jirarest filters
 ```
@@ -42,9 +42,9 @@ This is a JIRA Add-on for Splunk.
 ```
 | jirarest rapidboards [list|all|RAPIDBOARD_ID]
 ```
-  * list will list rapidboards. This is the default behavior.
-  * all will list all sprints in all rapidboards.
-  * RAPIDBOARD_ID will list all sprints in that rapidboard.
+  * list will list all scrum boards. This is the default behavior.
+  * all will list all sprints in all scrum boards.
+  * RAPIDBOARD_ID will list all sprints in one specific scrum board
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
 * Pipe search results into a jqlquery
@@ -71,9 +71,10 @@ This is a JIRA Add-on for Splunk.
    * _time defaults to created if changetime is not set
    * Compatible with issues, jqlquery, and batch commands.
 
-* fields [INTERNAL_FIELD_NAME,...]
+* fields "[INTERNAL_FIELD_NAME,...]"
    * Limits the set of fields returned
    * Takes a comma-separated list of internal field names. No extra spaces, we're too lazy to trim
+   * If you want multiple fields, please enclose the field list in double-quotes
    * key and created are always returned
 
 #### Notes
