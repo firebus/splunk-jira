@@ -38,7 +38,7 @@ This is a JIRA Add-on for Splunk.
 | jirarest changelog JQL_QUERY
 ```
 
-* List rapidboards of the configured users (Greenhopper REST API)
+* List rapidboards or sprints (Greenhopper REST API)
 ```
 | jirarest rapidboards [list|all|RAPIDBOARD_ID]
 ```
@@ -89,6 +89,7 @@ This is a JIRA Add-on for Splunk.
 
 ```
 | jirasoap command options
+```
 
 #### Commands
 

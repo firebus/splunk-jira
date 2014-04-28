@@ -70,7 +70,7 @@ try:
       header.append(k)
    for k in custom_keys:
       header.append(k)
-   header.extend(['host', 'index', 'source', 'sourcetype', '_raw'])
+   header.extend(['host', 'index', 'source', 'sourcetype'])
 
    while True:
       query = urllib.urlencode({'jqlQuery':jql, 'tempMax':count, 'pager/start':offset})
@@ -141,9 +141,8 @@ try:
 
          row['host'] = hostname
          row['index'] = 'jira'
-         row['source'] = 'jql'
-         row['sourcetype'] = 'jira_xml'
-         #row['_raw'] = ', '.join("%s=%r" % (key,val) for (key,val) in row.iteritems())
+         row['source'] = 'jira_xml'
+         row['sourcetype'] = 'jira_issues'
 
          results.append(row)
 

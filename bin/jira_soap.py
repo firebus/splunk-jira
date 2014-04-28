@@ -61,11 +61,14 @@ try:
       for filter in filters:
          row = jiracommon.flatten(filter, keys)
          logger.info(time.time())
+         row['host'] = hostname
+         row['source'] = "jira_soap"
+         row['sourcetype'] = "jira_filters"
          row['_time'] = int(time.time())
-         row['_raw'] = row
          results.append(row)
       isp.outputResults(results)
       sys.exit(0)
+
    elif sys.argv[1] == 'issues':
       filter_id = sys.argv[-1]
       issues = client.service.getIssuesFromFilter(auth, filter_id)
@@ -121,11 +124,10 @@ try:
          if f['customfieldId'] == "customfield_10091":
             row['TargetRelease'] = f['values']
 
-      row['host'] = hostname
       row['index'] = 'jira'
-      row['source'] = sys.argv[1]
-      row['sourcetype'] = 'jira_soap'
-      #row['_raw'] = ', '.join("%s=%r" % (key,val) for (key,val) in row.iteritems())
+      row['host'] = hostname
+      row['source'] = 'jira_soap'
+      row['sourcetype'] = "jira_issues"
 
       # override _time if time argument is set
       if time_option == "now":

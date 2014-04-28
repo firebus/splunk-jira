@@ -49,6 +49,9 @@ if option == 'filters':
       row['owner_name'] = filter['owner']['displayName']
       row['search'] = filter['jql']
       row['url'] = filter['viewUrl']
+      row['host'] = hostname
+      row['source'] = "jira_rest"
+      row['sourcetype'] = "jira_filters"
       row['_time'] = int(time.time())
       row['_raw'] = row
       results.append(row)
@@ -77,9 +80,9 @@ if option == 'rapidboards':
          for view in rapidboards['views']:
             row['name'] = view['name']
             row['id'] = view['id']
-            row['source'] = option
             row['host'] = hostname
-            row['sourcetype'] = "jira_rest_rapidboards"
+            row['source'] = "jira_rest"
+            row['sourcetype'] = "jira_rapidboards"
             row['_time'] = int(time.time())
             row['_raw'] = row
             results.append(row)
@@ -99,9 +102,9 @@ if option == 'rapidboards':
          row['sprint_id'] = sprint['id']
          row['sprint_name'] = sprint['name']
          row['sprint_state'] = sprint['state']
-         row['source'] = option
          row['host'] = hostname
-         row['sourcetype'] = "jira_rest_sprints"
+         row['source'] = "jira_rest"
+         row['sourcetype'] = "jira_sprints"
          row['_time'] = int(time.time())
          row['_raw'] = row
          results.append(row)
@@ -121,9 +124,9 @@ if option == 'rapidboards':
             row['sprint_name'] = sprint['name']
             row['sprint_state'] = sprint['state']
             row['_time'] = int(time.time())
-            row['source'] = option
             row['host'] = hostname
-            row['sourcetype'] = "jira_rest_sprints"
+            row['source'] = "jira_rest"
+            row['sourcetype'] = "jira_sprints"
             row['_time'] = int(time.time())
             row['_raw'] = row
             row['name'] = view['name']
@@ -172,9 +175,9 @@ if option == 'changelog':
             epoch = int(time.mktime(time.strptime(jdate, pattern)))
             row['_time'] = epoch
             row['_raw'] = row
-            row['source'] = option
             row['host'] = hostname
-            row['sourcetype'] = "jira_rest_changelog"
+            row['source'] = "jira_rest"
+            row['sourcetype'] = "jira_changelog"
             row['key']=issue['key']
             if issue['fields']['reporter'] == None:
                row['reporter'] = None
@@ -307,9 +310,9 @@ def main(changefield,comments,timestamp):
                   epoch = 0
                row['_time'] = epoch
                row['_raw'] = row
-               row['source'] = option
                row['host'] = hostname
-               row['sourcetype'] = "jira_rest_comments"
+               row['source'] = "jira_rest"
+               row['sourcetype'] = "jira_comments"
                results.append(row)
                row={}
             splunk.Intersplunk.outputStreamResults(results)
@@ -444,9 +447,9 @@ def main(changefield,comments,timestamp):
             row['Key'] = issue['key']
          row['_time'] = epoch
          row['_raw'] = row
-         row['source'] = option
          row['host'] = hostname
-         row['sourcetype'] = "jira_rest_issues"
+         row['source'] = "jira_rest"
+         row['sourcetype'] = "jira_issues"
          results.append(row)     
          row = {}
       splunk.Intersplunk.outputStreamResults(results)
@@ -465,8 +468,9 @@ def main(changefield,comments,timestamp):
       row['_time'] = int(time.time())
       row['error'] = str(str(e))
       row['host'] = hostname
-      row['search'] = " ".join(args)
-      row['sourcetype'] = 'jira_rest_exception'
+      row['search'] = " " . join(args)
+      row['source'] = "jira_rest"
+      row['sourcetype'] = 'jira_exception'
       results.append(row)
       splunk.Intersplunk.outputStreamResults(results)
 
