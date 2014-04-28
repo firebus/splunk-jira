@@ -124,7 +124,6 @@ try:
          if f['customfieldId'] == "customfield_10091":
             row['TargetRelease'] = f['values']
 
-      row['index'] = 'jira'
       row['host'] = hostname
       row['source'] = 'jira_soap'
       row['sourcetype'] = "jira_issues"
