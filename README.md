@@ -18,12 +18,12 @@ This is a JIRA Add-on for Splunk.
 
 #### Commands
 
-* List filters created by the configured user
+* List favorite filters of the configured user
 ```
 | jirarest filters
 ```
 
-* Run a filter.
+* Run a specific filter and return Issues
 ```
 | jirarest issues FILTER_ID
 ```
@@ -33,12 +33,12 @@ This is a JIRA Add-on for Splunk.
 | jirarest jqlsearch JQL_QUERY
 ```
 
-* Run a JQL search and return the change history for all matching Issues.
+* Run a JQL search and return the all Changes for all matching Issues.
 ```
 | jirarest changelog JQL_QUERY
 ```
 
-* List rapidboards (Greenhopper)
+* List rapidboards of the configured users (Greenhopper REST API)
 ```
 | jirarest rapidboards [list|all|RAPIDBOARD_ID]
 ```
@@ -47,20 +47,20 @@ This is a JIRA Add-on for Splunk.
   * RAPIDBOARD_ID will list all sprints in one specific scrum board
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
-* Pipe search results into a jqlquery
+* Pipe search results into a jqlsearch
 ```
-| search ... | eval foo="WTF-1,WTF-2,WTF-3" | makemv delim=, foo | map search="|jirarest batch JQL_QUERY_IN $foo$"
+| search ... | eval foo="WTF-1,WTF-2,WTF-3" | makemv delim=, foo | map search="|jirarest batch JQL_QUERY $foo$"
 ```
-  * The JQL_QUERY in the batch command is a partial query that ends with the IN keyword.
+  * The JQL_QUERY in the batch command is a partial query that ends with the IN keyword, e.g. "key in"
   * Results piped in from the preceding search will populate the IN clause.
   * Results piped in can be comma- or space- separated
-  * This is a little ungainly, but quite powerful if you want to pull a list of JIRA keys from an external source and then search them all in JIRA
+  * This is a little ungainly, but quite powerful if you want to pull a list of JIRA keys from an external source and then get all the Issues from JIRA
 
 #### Options
 
 * comments 
   * Shows comments for all Issues returned by main option.
-  * Compatible with issues,jqlquery, and batch commands.
+  * Compatible with issues, jqlquery, and batch commands.
 
 * changefield
   * By default, pretty names for fields are show. Changefield outputs internal field names instead.
