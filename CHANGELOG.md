@@ -5,7 +5,10 @@ Change Log
 
 * Add jirarest command and documentation
 * Rename jira and jiraevents commands to jiraxml and jiraxmlevents respectively - "| jira" is now an alias of jirarest
-* jiraxml and jirasoap commands are now deprecated, and will not be further developed (but pull requests are still accepted if there's something you need to have fixed!)
+* jiraxml and jirasoap commands are now deprecated, and will not be developed further (but pull requests are still accepted if there's something you need to have fixed!)
+* source is standardized as the command being run: jira_rest, jira_xml, jira_soap
+* sourcetype is standardized as the kind of results being returned: jira_issues, jira_filters, jira_sprints, etc.
+* index is no longer set in returned events
 
 ## 1.11
 
