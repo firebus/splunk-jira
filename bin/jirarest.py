@@ -208,17 +208,9 @@ def main(changefield,comments,timestamp):
   try: 
     row = {}
     results = []
-    affectsmv = []
-    fixesmv = []
     fieldlist = {}
     flist = []
-    linkedmv = []
-    linkedstatusmv = []
-    linkedprioritymv = []
-    linkedsummarymv = []
-    linkedtypemv = []
     fields = ""
-    componentsmv = []
     try: issuecount
     except: issuecount = 0  
     if issuecount >= 1000:
@@ -330,44 +322,96 @@ def main(changefield,comments,timestamp):
               row[field] = None
            elif (isinstance(issue['fields'][jirafield], basestring) == True):
                 row[field] = issue['fields'][jirafield]
-                if field == 'Labels':
-                  row[field] = issue['fields'][jirafield]
            elif (isinstance(issue['fields'][jirafield], collections.Iterable) == True):
+                if jirafield=='labels':
+                    row[field]=issue['fields'][jirafield]
                 for mvfield1 in issue['fields'][jirafield]:
-                   if (isinstance(mvfield1, basestring) == True):
+                  if (isinstance(mvfield1, basestring) == True):
                     if mvfield1 == 'name' or mvfield1 == 'value' or mvfield1 == 'displayName':
                        if mvfield1 == 'displayName':
                           row[field + "_" + "Name"] = issue['fields'][jirafield][mvfield1]
                        else:
                           row[field] = issue['fields'][jirafield][mvfield1]
-                   else:
-                     if (isinstance(mvfield1, collections.Iterable) == True):
-                        for mvfield2 in mvfield1:
-                         if (isinstance(mvfield2, basestring) == True):
-                             if mvfield2 == 'name' or mvfield2 == 'value' or mvfield2 == 'displayName': 
-                               if jirafield == 'versions': 
-                                 affectsmv.append(mvfield1[mvfield2])
-                               elif jirafield == 'fixVersions':
-                                 fixesmv.append(mvfield1[mvfield2])
-                               elif jirafield == 'components':
-                                 componentsmv.append(mvfield1[mvfield2])
-                               else:
-                                 row[field] = mvfield1[mvfield2]   
-                                     
-                             elif mvfield2 == 'inwardIssue' or mvfield2 == 'outwardIssue':
+                    elif mvfield1=='total' :
+                        row[field+"_total"]=issue['fields'][jirafield][mvfield1]
+                    elif mvfield1=='progress' :
+                        row[field+"_progress"]=issue['fields'][jirafield][mvfield1]
+                  elif (isinstance(mvfield1, collections.Iterable)==True):
+                      for mvfield2 in mvfield1: 
+                         if mvfield2=='key':
+                            try:
+                               row[field].append(mvfield1[mvfield2])
+                            except:
+                               row[field]=[]
+                               row[field].append(mvfield1[mvfield2])
+                         if (isinstance(mvfield1[mvfield2], basestring)==True):
+                            if mvfield2=='name' or mvfield2=='value' or mvfield2=='displayName':
+                              try:
+                                 row[field].append(mvfield1[mvfield2])
+                              except:
+                                 row[field]=[]
+                                 row[field].append(mvfield1[mvfield2])
+                         else:
+                            if  (isinstance(mvfield1[mvfield2], collections.Iterable)==True):
                                for mvfield3 in mvfield1[mvfield2]:
-                                  if mvfield3 == 'key':
-                                    linkedmv.append(mvfield1[mvfield2][mvfield3])
-                                    if mvfield2 == "inwardIssue":
-                                       linkedtypemv.append(mvfield1['type']['inward'] + "-" + mvfield1[mvfield2][mvfield3])
-                                    if mvfield2 == "outwardIssue":
-                                       linkedtypemv.append(mvfield1['type']['outward'] + "-" + mvfield1[mvfield2][mvfield3])
-                                    if 'summary' in mvfield1[mvfield2]['fields']:
-                                      linkedsummarymv.append(mvfield1[mvfield2][mvfield3] + "-" + mvfield1[mvfield2]['fields']['summary'])
-                                    if 'status' in mvfield1[mvfield2]['fields']:
-                                       linkedstatusmv.append(mvfield1[mvfield2][mvfield3] + "-" + mvfield1[mvfield2]['fields']['status']['name'])
-                                    if 'priority' in mvfield1[mvfield2]['fields']:
-                                       linkedprioritymv.append(mvfield1[mvfield2][mvfield3] + "-" + mvfield1[mvfield2]['fields']['priority']['name'])
+                                   if jirafield=="issuelinks":
+                                      if mvfield3=='key':
+                                         try:
+                                           row[field].append(mvfield1[mvfield2][mvfield3])
+                                         except:
+                                           row[field]=[]
+                                           row[field].append(mvfield1[mvfield2][mvfield3])
+                                         if mvfield2=="inwardIssue":
+                                            try:
+                                              row[field+'_type'].append(mvfield1['type']['inward']+"-"+mvfield1[mvfield2][mvfield3])
+                                            except:
+                                              row[field+'_type']=[]
+                                              row[field+'_type'].append(mvfield1['type']['inward']+"-"+mvfield1[mvfield2][mvfield3])
+                                         if mvfield2=="outwardIssue":
+                                            try:
+                                              row[field+'_type'].append(mvfield1['type']['outward']+"-"+mvfield1[mvfield2][mvfield3])
+                                            except:
+                                              row[field+'_type']=[]
+                                              row[field+'_type'].append(mvfield1['type']['outward']+"-"+mvfield1[mvfield2][mvfield3])
+                                         if 'summary' in mvfield1[mvfield2]['fields']:
+                                            try:
+                                              row[field+'_summary'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['summary'])
+                                            except:
+                                              row[field+'_summary']=[]
+                                              row[field+'_summary'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['summary'])
+                                         if 'status' in mvfield1[mvfield2]['fields']:
+                                            try:
+                                              row[field+'_status'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['status']['name'])
+                                            except:
+                                              row[field+'_status']=[]
+                                              row[field+'_status'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['status']['name'])
+                                         if 'priority' in mvfield1[mvfield2]['fields']:
+                                            try:
+                                              row[field+'_priority'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['priority']['name'])
+                                            except:
+                                              row[field+'_priority']=[]
+                                              row[field+'_priority'].append(mvfield1[mvfield2][mvfield3]+"-"+mvfield1[mvfield2]['fields']['priority']['name'])
+                               if 'summary' in mvfield1[mvfield2]:
+                                            try:
+                                              row[field+'_summary'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['summary'])
+                                            except:
+                                              row[field+'_summary']=[]
+                                              row[field+'_summary'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['summary'])
+                               if 'status' in mvfield1[mvfield2]:
+                                            try:
+                                              row[field+'_status'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['status']['name'])
+                                            except:
+                                              row[field+'_status']=[]
+                                              row[field+'_status'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['status']['name'])
+                               if 'priority' in mvfield1[mvfield2]:
+                                            try:
+                                              row[field+'_priority'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['priority']['name'])
+                                            except:
+                                              row[field+'_priority']=[]
+                                              row[field+'_priority'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['priority']['name'])
+
+                  else:
+                    row[field]=issue['fields'][jirafield][mvfield1]
            else:
               row[field] = str(issue['fields'][jirafield])
        
@@ -378,23 +422,6 @@ def main(changefield,comments,timestamp):
                 epoch = int(time.mktime(time.strptime(jdate, pattern)))
           else:
              epoch = 0
-          if affectsmv != []:
-            row['Affects Version/s'] = affectsmv
-          if fixesmv != []:
-            row['Fix Version/s'] = fixesmv
-          if linkedmv != []:
-            row['Linked'] = linkedmv
-          if linkedstatusmv != []:
-            row['Linked_status'] = linkedstatusmv
-          if linkedprioritymv != []:
-            row['Linked_priority'] = linkedprioritymv
-          if linkedsummarymv != []:
-            row['Linked_summary'] = linkedsummarymv
-          if linkedtypemv != []:
-            row['Linked_type'] = linkedtypemv
-          if componentsmv != []:
-            row['Component/s'] = componentsmv
-
        else:
           if row[timestamp] != None:
               if datevalues.match(row[timestamp]):
@@ -402,22 +429,6 @@ def main(changefield,comments,timestamp):
                 epoch = int(time.mktime(time.strptime(jdate, pattern)))
           else:
              epoch = 0
-          if affectsmv != []:
-            row['versions'] = affectsmv
-          if fixesmv != []:
-            row['fixVersions'] = fixesmv
-          if linkedmv != []:
-            row['issuelinks'] = linkedmv
-          if linkedstatusmv != []:
-            row['issuelinks_status'] = linkedstatusmv
-          if linkedprioritymv != []:
-            row['issuelinks_priority'] = linkedprioritymv
-          if linkedsummarymv != []:
-            row['issuelinks_summary'] = linkedsummarymv
-          if linkedtypemv != []:
-            row['issuelinks_type'] = linkedtypemv
-          if componentsmv != []:
-            row['components'] = componentsmv
 
        if changefield == True: 
          row['key'] = issue['key']
@@ -431,14 +442,6 @@ def main(changefield,comments,timestamp):
        row['sourcetype'] = "jira_rest_issues"
        results.append(row)     
        row = {}
-       fixesmv = []
-       affectsmv = []
-       linkedstatusmv = []
-       linkedmv = []
-       linkedprioritymv = []
-       linkedsummarymv = []
-       linkedtypemv = []
-       componentsmv=[]
     splunk.Intersplunk.outputStreamResults(results)
     results = []
     issuecount = issuecount + len(full2['issues'])
