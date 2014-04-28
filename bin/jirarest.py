@@ -78,8 +78,7 @@ if option == 'rapidboards':
          row['name'] = view['name']
          row['id'] = view['id']
          row['source'] = option
-         # TODO pull host from config.ini
-         row['host'] = "JIRA"
+         row['host'] = hostname
          row['sourcetype'] = "jira_rest_rapidboards"
          row['_time'] = int(time.time())
          row['_raw'] = row
@@ -101,8 +100,7 @@ if option == 'rapidboards':
         row['sprint_name'] = sprint['name']
         row['sprint_state'] = sprint['state']
         row['source'] = option
-        # TODO pull host from config.ini
-        row['host'] = "JIRA"
+        row['host'] = hostname
         row['sourcetype'] = "jira_rest_sprints"
         row['_time'] = int(time.time())
         row['_raw'] = row
@@ -124,8 +122,7 @@ if option == 'rapidboards':
         row['sprint_state'] = sprint['state']
         row['_time'] = int(time.time())
         row['source'] = option
-        # TODO pull host from config.ini
-        row['host'] = "JIRA"
+        row['host'] = hostname
         row['sourcetype'] = "jira_rest_sprints"
         row['_time'] = int(time.time())
         row['_raw'] = row
@@ -176,8 +173,7 @@ if option == 'changelog':
            row['_time'] = epoch
            row['_raw'] = row
            row['source'] = option
-           # TODO pull host from config.ini
-           row['host'] = "JIRA"
+           row['host'] = hostname
            row['sourcetype'] = "jira_rest_changelog"
            row['key']=issue['key']
            if issue['fields']['reporter'] == None:
@@ -313,8 +309,7 @@ def main(changefield,comments,timestamp):
               row['_time'] = epoch
               row['_raw'] = row
               row['source'] = option
-              # TODO pull host from config.ini
-              row['host'] = "JIRA"
+              row['host'] = hostname
               row['sourcetype'] = "jira_rest_comments"
               results.append(row)
               row={}
@@ -452,8 +447,7 @@ def main(changefield,comments,timestamp):
        row['_time'] = epoch
        row['_raw'] = row
        row['source'] = option
-       # TODO pull host from config.ini
-       row['host'] = "JIRA"
+       row['host'] = hostname
        row['sourcetype'] = "jira_rest_issues"
        results.append(row)     
        row = {}
@@ -472,8 +466,7 @@ def main(changefield,comments,timestamp):
         stack =  traceback.format_exc()
         row['_time'] = int(time.time())
         row['error'] = str(str(e))
-        # TODO pull host from config.ini
-        row['host']= JIRA
+        row['host'] = hostname
         row['search'] = " ".join(args)
         row['sourcetype'] = 'jira_rest_exception'
         results.append(row)

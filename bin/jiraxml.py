@@ -42,8 +42,8 @@ try:
    hostname = local_conf.get('jira', 'hostname')
    username = local_conf.get('jira', 'username')
    password = local_conf.get('jira', 'password')
-   protocol = local_conf.get('jira', 'jira_protocol');
-   port = local_conf.get('jira', 'jira_port');
+   protocol = local_conf.get('jira', 'jira_protocol')
+   port = local_conf.get('jira', 'jira_port')
 
    keywords, argvals = isp.getKeywordsAndOptions()
    logger.info('keywords: %s' % keywords)
