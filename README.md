@@ -13,44 +13,52 @@ This is a JIRA Add-on for Splunk.
 #### Syntax
 
 ```
-| jirarest command options
+| jirarest MODE OPTIONS
 ```
 
-#### Commands
+#### Modes
 
 * List favorite filters of the configured user
-```
-| jirarest filters
-```
+
+  ```
+  | jirarest filters
+  ```
 
 * Run a specific filter and return Issues
-```
-| jirarest issues FILTER_ID
-```
+
+  ```
+  | jirarest issues FILTER_ID
+  ```
 
 * Run a JQL search and return Issues.
-```
-| jirarest jqlsearch JQL_QUERY
-```
+
+  ```
+  | jirarest jqlsearch JQL_QUERY
+  ```
 
 * Run a JQL search and return the all Changes for all matching Issues.
-```
-| jirarest changelog JQL_QUERY
-```
+  
+  ```
+  | jirarest changelog JQL_QUERY
+  ```
 
 * List rapidboards or sprints (Greenhopper REST API)
-```
-| jirarest rapidboards [list|all|RAPIDBOARD_ID]
-```
+
+  ```
+  | jirarest rapidboards [list|all|RAPIDBOARD_ID]
+  ```
+
   * list will list all scrum boards. This is the default behavior.
   * all will list all sprints in all scrum boards.
   * RAPIDBOARD_ID will list all sprints in one specific scrum board
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
 * Pipe search results into a jqlsearch
-```
-| search ... | eval foo="WTF-1,WTF-2,WTF-3" | makemv delim=, foo | map search="|jirarest batch JQL_QUERY $foo$"
-```
+
+  ```
+  | search ... | eval foo="WTF-1,WTF-2,WTF-3" | makemv delim=, foo | map search="|jirarest batch JQL_QUERY $foo$"
+  ```
+
   * The JQL_QUERY in the batch command is a partial query that ends with the IN keyword, e.g. "key in"
   * Results piped in from the preceding search will populate the IN clause.
   * Results piped in can be comma- or space- separated
@@ -80,38 +88,40 @@ This is a JIRA Add-on for Splunk.
 #### Notes
 
 * The rest command can also be called with | jira. 
-* Multi-value custom fields are not currently supported (I think we'll just return the first value)
-* This command doesn't work yet, but will by the time we merge the branch
 
 ### jirasoap (SOAP API - deprecated)
 
 #### Syntax
 
 ```
-| jirasoap command options
+| jirasoap MODE OPTIONS
 ```
 
-#### Commands
+#### MODES
 
 * List all filters available to the logged-in user
-```
-| jirasoap filters
-```
+
+  ```
+  | jirasoap filters
+  ```
 
 * Run a filter
-```
-| jirasoap issues [time=TIME_OPTION] FILTER_ID
-```
+
+  ```
+  | jirasoap issues [time=TIME_OPTION] FILTER_ID
+  ```
 
 * Run a text search
-```
-| jirasoap search [time=TIME_OPTION] "foo bar bas"
-```
+
+  ```
+  | jirasoap search [time=TIME_OPTION] "foo bar bas"
+  ```
 
 * Run a JQL search
-```
-| jirasoap jqlsearch [time=TIME_OPTION] JQL_QUERY
-```
+
+  ```
+  | jirasoap jqlsearch [time=TIME_OPTION] JQL_QUERY
+  ```
 
 #### Options
 
