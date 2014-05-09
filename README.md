@@ -1,7 +1,7 @@
  Add-on for JIRA
 ======================
 
-This an Add-on for JIRA.
+This is an Add-on for JIRA.
 
 * Download from https://www.github.com/firebus/splunk-jira
 * Upgoat at http://apps.splunk.com/app/1438/
