@@ -151,7 +151,7 @@ if option == 'rapidboards':
 # changelog
 if option == 'changelog':
    target = jiraserver + "/rest/api/2/search?jql="
-   args=sys.argv[2].split()
+   args=urllib.quote_plus(sys.argv[2]).split()
    querystring = '+'.join(args)
    clfieldmv = []
    clfrommv = []
@@ -233,7 +233,7 @@ def main(changefield,comments,timestamp):
 
       # jqlsearch
       if option == 'jqlsearch':
-         args=sys.argv[2].split()
+         args=urllib.quote_plus(sys.argv[2]).split()
          if len(sys.argv) > 3 and "fields" in sys.argv[3:]:
             fields="&fields=key,id,created," + sys.argv[sys.argv.index('fields') + 1]
          target = jiraserver + "/rest/api/2/search?jql="
@@ -245,7 +245,7 @@ def main(changefield,comments,timestamp):
 
       # batch
       if option == 'batch':
-         args = sys.argv[2].split()
+         args = urllib.quote_plus(sys.argv[2]).split()
          batchargs = sys.argv[3]
          if len(sys.argv) > 4 and "fields" in sys.argv[4:]:
             fields = "&fields=key,id,created," + sys.argv[sys.argv.index('fields') + 1]

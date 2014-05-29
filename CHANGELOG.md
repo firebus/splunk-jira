@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+## 2.0.1
+
+* Add urlencode.quote_plus to arguments so that we don't barf on special characters
+
 ## 2.0
 
 * Add jirarest command and documentation
