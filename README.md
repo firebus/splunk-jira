@@ -169,6 +169,20 @@ Configure which keys to display in the table with the keys, time_keys, and custo
 
 * Note that the SOAP API command ignores the key configuration.
 
+## Workflows
+
+### Create Issue in JIRA
+
+This event workflow facilitates creating Issues in JIRA for particular events. To enable this workflow:
+
+* Copy defaults/macros.conf to local/macros.conf and update the base_url, project_id, and issuetype_id fields to reasonable values
+  for your environment
+* Use the `jiraWorkflow` macro in a search to add these fields and enable the workflow
+* "Create Issue in JIRA" should now be an option in the event workflow dropdown
+* If any required fields are not filled out by the workflow action, you'll need to fill out those fields before creating the Issue
+* If no required fields are left unfilled, the Issue will be created automatically
+* If you're not logged in, JIRA will bounce you to a login page, and then back to the Create Issue form
+
 ## Acknowledgements
 
 * App maintained by Russell Uman
