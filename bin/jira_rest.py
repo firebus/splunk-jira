@@ -64,11 +64,13 @@ if option == 'filters':
 if option == 'rapidboards':
    args = sys.argv[2]
    if args == "all":
-      target = jiraserver + "/rest/greenhopper/1.0/rapidviews/list"
+     target = jiraserver + "/rest/greenhopper/1.0/rapidviews/list"
    elif args == "list":
-      target = jiraserver + "/rest/greenhopper/1.0/rapidview"
+     target = jiraserver + "/rest/greenhopper/1.0/rapidview"
+   elif "detail" in sys.argv:
+     target = jiraserver + "/rest/greenhopper/1.0/xboard/work/allData/?rapidViewId=" + args
    else:
-      target = jiraserver + "/rest/greenhopper/1.0/rapidview/"+args
+     target = jiraserver + "rest/greenhopper/1.0/rapidview/" + args
    reqrb = urllib2.Request(target)
    reqrb.add_header('Content-Type', 'application/json; charset=utf-8')
    reqrb.add_header('Authorization', 'Basic '+authencode )
@@ -76,74 +78,164 @@ if option == 'rapidboards':
    rapidboards = json.load(rbopen)
    rbamv = []
    if args != "all":
-      if args == "list":
-         for view in rapidboards['views']:
-            row['name'] = view['name']
-            row['id'] = view['id']
-            row['host'] = hostname
-            row['source'] = "jira_rest"
-            row['sourcetype'] = "jira_rapidboards"
-            row['_time'] = int(time.time())
-            row['_raw'] = row
-            results.append(row)
-            row = {}
-         splunk.Intersplunk.outputStreamResults(results)
-         results = []
-         exit()
-      target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/"+str(rapidboards['id'])+"?includeHistoricSprints=true&includeFutureSprints=true"
+     if args == "list":
+       for view in rapidboards['views']:
+        row['name'] = view['name']
+        row['id'] = view['id']
+        row['host'] = hostname
+        row['source'] = "jira_rest"
+        row['sourcetype'] = "jira_rapidboards"
+        row['_time'] = int(time.time())
+        row['_raw'] = row
+        results.append(row)
+        row = {}
+       splunk.Intersplunk.outputStreamResults(results)
+       results = []
+       exit()
+     if "detail" in sys.argv:
+          swimlanes = {}
+          customlanes = {}
+          detailidx = sys.argv.index("detail")
+          detailarg = sys.argv[detailidx+1]
+          if detailarg == "issues":
+            for sw in rapidboards['columnsData']['columns']:
+               for j in sw['statusIds']:
+                  swimlanes[j]=sw['name']
+            if "customSwimlanesData" in rapidboards['swimlanesData']:
+               csw = True
+               for wja in rapidboards['swimlanesData']['customSwimlanesData']['swimlanes']:
+                 for i in wja['issueIds']:
+                   customlanes[i] = {"name":wja['name'], "query":wja['query']}
+            else:
+               csw = False
+            for i in rapidboards['issuesData']['issues']:
+                for j in i:
+                  if "Statistic" in j:
+                    field = i[j]['statFieldId']
+                    if 'value' in i[j]['statFieldValue'].keys():
+                      row[field] = str(i[j]['statFieldValue']['value'])
+                    else:
+                      row[field] = ''
+                  else:
+                    if "status" in j:
+                       if j == "statusName":
+                         row['status'] = i[j]
+                       if j == "statusId":
+                          try:
+                            row['swimlane'].append(swimlanes[i[j]])
+                          except:
+                            row['swimlane']=[]
+                            row['swimlane'].append(swimlanes[i[j]])
+                    elif "type" in j:
+                       if j == "typeName":
+                          row['type'] = i[j]
+                    elif "priority" in j:
+                       if j == "priorityName":
+                          row['priority']=i[j]
+                    elif j == "fixVersions":
+                         for fv in i[j]:
+                           try:
+                              row['fixVersions'].append(str(fv))
+                           except:
+                               row['fixVersions'] = []
+                               row['fixVersions'].append(str(fv))
+                    elif j == "id":
+                       if csw == True:
+                         row['custom_group'] = customlanes[i[j]]['name']
+                         row['custom_query'] = customlanes[i[j]]['query']
+                       row['id'] = i[j]
+                    else:
+                      row[j] = str(i[j])
+                row['rapidboard'] = rapidboards["rapidViewId"]
+                row['source'] = option
+                row['host'] = "JIRA"
+                row['sourcetype'] = "jira_rapidboards"
+                row['_time'] = int(time.time())
+                row['_raw'] = row
+                results.append(row)
+                row = {}
+            splunk.Intersplunk.outputStreamResults(results)
+            results = []
+            exit()
+          elif detailarg == "sprints":
+           for i in rapidboards["sprintsData"]["sprints"]:
+                 for k in i:
+                     if k == "remoteLinks":
+                       for rl in i[k]:
+                           if "url" in rl:
+                            try:
+                              row['remoteLinks'].append(str(rl['url']))
+                            except:
+                              row['remoteLinks']=[]
+                              row['remoteLinks'].append(str(rl['url']))
+                     else:
+                        row[k] = i[k]
+                 row['rapidboard'] = rapidboards["rapidViewId"]
+                 row['host'] = hostname
+                 row['source'] = "jira_rest"
+                 row['sourcetype'] = "jira_rapidboads"
+                 row['_time'] = int(time.time())
+                 row['_raw'] = row
+
+                 results.append(row)
+                 row = {}
+                 splunk.Intersplunk.outputStreamResults(results)
+                 results = []
+          exit()
+     target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(rapidboards['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
+     reqsp = urllib2.Request(target2)
+     reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
+     reqsp.add_header('Authorization', 'Basic ' + authencode )
+     sprintopen = urllib2.urlopen(reqsp)
+     sprints = json.load(sprintopen)
+     for sprint in sprints['sprints']:
+        row['name'] = rapidboards['name']
+        row['id'] = rapidboards['id']
+        row['sprint_id'] = sprint['id']
+        row['sprint_name'] = sprint['name']
+        row['sprint_state'] = sprint['state']
+        row['host'] = hostname
+        row['source'] = "jira_rest"
+        row['sourcetype'] = "jira_sprints"
+        row['_time'] = int(time.time())
+        row['_raw'] = row
+        results.append(row)
+        row = {}
+        splunk.Intersplunk.outputStreamResults(results)
+        results = []
+   else:
+     for view in rapidboards['views']:
+      target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints = true&includeFutureSprints=true"
       reqsp = urllib2.Request(target2)
       reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
-      reqsp.add_header('Authorization', 'Basic ' + authencode )
+      reqsp.add_header('Authorization', 'Basic '+authencode )
       sprintopen = urllib2.urlopen(reqsp)
       sprints = json.load(sprintopen)
       for sprint in sprints['sprints']:
-         row['name'] = rapidboards['name']
-         row['id'] = rapidboards['id']
-         row['sprint_id'] = sprint['id']
-         row['sprint_name'] = sprint['name']
-         row['sprint_state'] = sprint['state']
-         row['host'] = hostname
-         row['source'] = "jira_rest"
-         row['sourcetype'] = "jira_sprints"
-         row['_time'] = int(time.time())
-         row['_raw'] = row
-         results.append(row)
-         row = {}
-         splunk.Intersplunk.outputStreamResults(results)
-         results = []
-   else:
-      for view in rapidboards['views']:
-         target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
-         reqsp = urllib2.Request(target2)
-         reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
-         reqsp.add_header('Authorization', 'Basic '+authencode )
-         sprintopen = urllib2.urlopen(reqsp)
-         sprints = json.load(sprintopen)
-         for sprint in sprints['sprints']:
-            row['sprint_id'] = sprint['id']
-            row['sprint_name'] = sprint['name']
-            row['sprint_state'] = sprint['state']
-            row['_time'] = int(time.time())
-            row['host'] = hostname
-            row['source'] = "jira_rest"
-            row['sourcetype'] = "jira_sprints"
-            row['_time'] = int(time.time())
-            row['_raw'] = row
-            row['name'] = view['name']
-            row['id'] = view['id']
-            row['owner'] = view['filter']['owner']['userName']
-            row['owner_name'] = view['filter']['owner']['displayName']
-            row['filter_query'] = view['filter']['query']
-            row['filter_name'] = view['filter']['name']
-            row['filter_id'] = view['filter']['id']
-            for admin in view['boardAdmins']['userKeys']:
-               rbamv.append(admin['key'])
-            row['boardAdmins'] = rbamv
-            row['_time'] = int(time.time())
-            row['_raw'] = row
-            results.append(row)
-            row = {}
-            rbamv = []
+        row['sprint_id'] = sprint['id']
+        row['sprint_name'] = sprint['name']
+        row['sprint_state'] = sprint['state']
+        row['_time'] = int(time.time())
+        row['host'] = hostname
+        row['source'] = "jira_rest"
+        row['sourcetype'] = "jira_sprints"
+        row['_time'] = int(time.time())
+        row['_raw'] = row
+        row['name'] = view['name']
+        row['id'] = view['id']
+        row['owner'] = view['filter']['owner']['userName']
+        row['owner_name'] = view['filter']['owner']['displayName']
+        row['filter_query'] = view['filter']['query']
+        row['filter_name'] = view['filter']['name']
+        row['filter_id'] = view['filter']['id']
+        for admin in view['boardAdmins']['userKeys']:
+           rbamv.append(admin['key'])
+        row['boardAdmins'] = rbamv
+        row['_time'] = int(time.time())
+        row['_raw'] = row
+        results.append(row)
+        row = {}
+        rbamv = []
       splunk.Intersplunk.outputStreamResults(results)
       results = []
    exit()
@@ -338,7 +430,7 @@ def main(changefield,comments,timestamp):
                if jirafield=='labels':
                   row[field]=issue['fields'][jirafield]
                for mvfield1 in issue['fields'][jirafield]:
-                  if (isinstance(mvfield1, basestring) == True):
+                  if (isinstance(mvfield1, basestring) == True) and jirafield != 'labels':
                      if mvfield1 == 'name' or mvfield1 == 'value' or mvfield1 == 'displayName':
                         if mvfield1 == 'displayName':
                            row[field + "_" + "Name"] = issue['fields'][jirafield][mvfield1]
@@ -348,7 +440,7 @@ def main(changefield,comments,timestamp):
                         row[field+"_total"]=issue['fields'][jirafield][mvfield1]
                      elif mvfield1=='progress' :
                         row[field+"_progress"]=issue['fields'][jirafield][mvfield1]
-                  elif (isinstance(mvfield1, collections.Iterable)==True):
+                  elif (isinstance(mvfield1, collections.Iterable) == True and jirafield != 'labels'):
                      for mvfield2 in mvfield1: 
                         if mvfield2=='key':
                            try:
@@ -422,9 +514,11 @@ def main(changefield,comments,timestamp):
                                     row[field+'_priority']=[]
                                     row[field+'_priority'].append(mvfield1['key']+"-"+mvfield1[mvfield2]['priority']['name'])
                   else:
-                     row[field]=issue['fields'][jirafield][mvfield1]
+                    if jirafield != 'labels':
+                       row[field] = issue['fields'][jirafield][mvfield1]
             else:
-               row[field] = str(issue['fields'][jirafield])
+               if jirafield != 'labels':
+                  row[field] = str(issue['fields'][jirafield])
 
          if changefield != True:
             if row[fieldlist[timestamp]] != None:
