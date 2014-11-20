@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+## 2.1
+
+* Add detail option to rapidboards mode
+* Fix exception when Labels have the value "Labels"
+
 ## 2.0.1
 
 * Add urlencode.quote_plus to arguments so that we don't barf on special characters
