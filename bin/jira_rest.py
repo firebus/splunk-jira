@@ -93,19 +93,19 @@ if option == 'rapidboards':
        results = []
        exit()
      if "detail" in sys.argv:
+          columns = {}
           swimlanes = {}
-          customlanes = {}
           detailidx = sys.argv.index("detail")
           detailarg = sys.argv[detailidx+1]
           if detailarg == "issues":
             for sw in rapidboards['columnsData']['columns']:
                for j in sw['statusIds']:
-                  swimlanes[j]=sw['name']
+                  columns[j]=sw['name']
             if "customSwimlanesData" in rapidboards['swimlanesData']:
                csw = True
                for wja in rapidboards['swimlanesData']['customSwimlanesData']['swimlanes']:
                  for i in wja['issueIds']:
-                   customlanes[i] = {"name":wja['name'], "query":wja['query']}
+                   swimlanes[i] = {"name":wja['name'], "query":wja['query']}
             else:
                csw = False
             for i in rapidboards['issuesData']['issues']:
@@ -122,10 +122,10 @@ if option == 'rapidboards':
                          row['status'] = i[j]
                        if j == "statusId":
                           try:
-                            row['swimlane'].append(swimlanes[i[j]])
+                            row['column'].append(columns[i[j]])
                           except:
-                            row['swimlane']=[]
-                            row['swimlane'].append(swimlanes[i[j]])
+                            row['column']=[]
+                            row['column'].append(columns[i[j]])
                     elif "type" in j:
                        if j == "typeName":
                           row['type'] = i[j]
@@ -141,8 +141,8 @@ if option == 'rapidboards':
                                row['fixVersions'].append(str(fv))
                     elif j == "id":
                        if csw == True:
-                         row['custom_group'] = customlanes[i[j]]['name']
-                         row['custom_query'] = customlanes[i[j]]['query']
+                         row['swimlane'] = swimlanes[i[j]]['name']
+                         row['swimlane_query'] = swimlanes[i[j]]['query']
                        row['id'] = i[j]
                     else:
                       row[j] = str(i[j])
