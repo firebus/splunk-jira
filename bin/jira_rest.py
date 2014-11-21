@@ -182,6 +182,7 @@ if option == 'rapidboards':
                  splunk.Intersplunk.outputStreamResults(results)
                  results = []
           exit()
+     # rapidboard ID (no detail requested)
      target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(rapidboards['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
      reqsp = urllib2.Request(target2)
      reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
@@ -203,6 +204,7 @@ if option == 'rapidboards':
         row = {}
         splunk.Intersplunk.outputStreamResults(results)
         results = []
+   # rapidboards all
    else:
      for view in rapidboards['views']:
       target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints = true&includeFutureSprints=true"

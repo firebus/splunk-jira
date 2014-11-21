@@ -1,4 +1,4 @@
- Add-on for JIRA
+Add-on for JIRA
 ======================
 
 This is an Add-on for JIRA.
