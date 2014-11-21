@@ -52,7 +52,7 @@ This is an Add-on for JIRA.
   * all will list all sprints in all scrum boards.
   * RAPIDBOARD_ID will list all sprints in one specific scrum board.
     * "detail sprints" gives details on the active sprints in the rapidboard.
-    * "detail issues" gives details on the active issues in the board including swimlane and groupings.
+    * "detail issues" gives details on the active issues in the board including swimlanes and groupings.
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
 * Pipe search results into a jqlsearch

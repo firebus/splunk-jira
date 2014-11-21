@@ -70,7 +70,7 @@ if option == 'rapidboards':
    elif "detail" in sys.argv:
      target = jiraserver + "/rest/greenhopper/1.0/xboard/work/allData/?rapidViewId=" + args
    else:
-     target = jiraserver + "rest/greenhopper/1.0/rapidview/" + args
+     target = jiraserver + "/rest/greenhopper/1.0/rapidview/" + args
    reqrb = urllib2.Request(target)
    reqrb.add_header('Content-Type', 'application/json; charset=utf-8')
    reqrb.add_header('Authorization', 'Basic '+authencode )
@@ -183,7 +183,7 @@ if option == 'rapidboards':
                  results = []
           exit()
      # rapidboard ID (no detail requested)
-     target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(rapidboards['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
+     target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/" + str(rapidboards['id']) + "?includeHistoricSprints=true&includeFutureSprints=true"
      reqsp = urllib2.Request(target2)
      reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
      reqsp.add_header('Authorization', 'Basic ' + authencode )
@@ -207,7 +207,7 @@ if option == 'rapidboards':
    # rapidboards all
    else:
      for view in rapidboards['views']:
-      target2 = jiraserver + "rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints = true&includeFutureSprints=true"
+      target2 = jiraserver + "/rest/greenhopper/1.0/sprintquery/" + str(view['id']) + "?includeHistoricSprints = true&includeFutureSprints=true"
       reqsp = urllib2.Request(target2)
       reqsp.add_header('Content-Type', 'application/json; charset=utf-8')
       reqsp.add_header('Authorization', 'Basic '+authencode )
