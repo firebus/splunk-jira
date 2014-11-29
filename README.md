@@ -48,11 +48,11 @@ This is an Add-on for JIRA.
   | jirarest rapidboards list|all|(RAPIDBOARD_ID [detail sprints|issues])
   ```
 
-  * list will list all scrum boards. This is the default behavior.
+  * list will list all scrum boards.
   * all will list all sprints in all scrum boards.
   * RAPIDBOARD_ID will list all sprints in one specific scrum board.
     * "detail sprints" gives details on the active sprints in the rapidboard.
-    * "detail issues" gives details on the active issues in the board including swimlanes and groupings.
+    * "detail issues" gives details on the active issues in active sprints including swimlanes and groupings.
     * Hint: to get issues in a sprint use jqlquery "sprint=sprint_id" after you have found the desired sprint id here with rapidboards.
 
 * Pipe search results into a jqlsearch
