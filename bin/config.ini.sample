@@ -6,3 +6,4 @@ jira_protocol = https
 jira_port = 443
 soap_protocol = https
 soap_port = 8080
+maxresults = 100

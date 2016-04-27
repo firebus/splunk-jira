@@ -21,6 +21,8 @@ local_conf = jiracommon.getLocalConf()
 # Set up authentication variables
 username = local_conf.get('jira', 'username')
 password = local_conf.get('jira', 'password')
+maxresults = local_conf.get('jira', 'maxresults')
+maxresults = int(maxresults) if maxresults else 1000
 auth = username + ':' + password
 authencode = base64.b64encode(auth)
 
@@ -250,7 +252,7 @@ if option == 'changelog':
    clfieldmv = []
    clfrommv = []
    cltomv = []
-   reqcl = urllib2.Request(target+querystring+"&fields=key,id,reporter,assignee,summary&maxResults=1000&expand=changelog&validateQuery=false")
+   reqcl = urllib2.Request(target+querystring+"&fields=key,id,reporter,assignee,summary&maxResults=" + str(maxresults) + "&expand=changelog&validateQuery=false")
    reqcl.add_header('Content-Type', 'application/json; charset=utf-8')
    reqcl.add_header('Authorization', 'Basic '+authencode )
    clopen = urllib2.urlopen(reqcl)
@@ -320,7 +322,7 @@ def main(changefield,comments,timestamp):
       fields = ""
       try: issuecount
       except: issuecount = 0  
-      if issuecount >= 1000:
+      if issuecount >= maxresults:
          offset = "&startAt=" + str(issuecount)
       else:
          offset = ""
@@ -333,9 +335,9 @@ def main(changefield,comments,timestamp):
          target = jiraserver + "/rest/api/2/search?jql="
          querystring = '+'.join(args)
          if comments == True:
-            req = urllib2.Request(target+querystring+"&maxResults=10000&fields=key"+offset+"&validateQuery=false")
+            req = urllib2.Request(target+querystring+"&maxResults=" + str(maxresults)  + "&fields=key"+offset+"&validateQuery=false")
          else:
-            req = urllib2.Request(target+querystring+"&maxResults=10000"+fields+offset+"&validateQuery=false")
+            req = urllib2.Request(target+querystring+"&maxResults="+ str(maxresults) +fields+offset+"&validateQuery=false")
 
       # batch
       if option == 'batch':
@@ -349,9 +351,9 @@ def main(changefield,comments,timestamp):
          target = jiraserver + "/rest/api/2/search?jql="
          querystring = '+'.join(args) + "("+batchargs+")"
          if comments == True:
-            req = urllib2.Request(target + querystring + "&maxResults=10000&fields=key" + offset + "&validateQuery=false")
+            req = urllib2.Request(target + querystring + "&maxResults=" + str(maxresults)  + "&fields=key" + offset + "&validateQuery=false")
          else:
-            req = urllib2.Request(target + querystring + "&maxResults=10000" + fields + offset + "&validateQuery=false")
+            req = urllib2.Request(target + querystring + "&maxResults=" + str(maxresults)  + fields + offset + "&validateQuery=false")
 
       # issues
       if option == 'issues':
@@ -360,9 +362,9 @@ def main(changefield,comments,timestamp):
             fields = "&fields=key,id,created," + sys.argv[sys.argv.index('fields') + 1]
          target = jiraserver + "/rest/api/2/search?jql=filter=" + args
          if comments == True:
-            req = urllib2.Request(target + "&maxResults=10000&fields=key" + offset + "&validateQuery=false")
+            req = urllib2.Request(target + "&maxResults=" + str(maxresults) +"&fields=key" + offset + "&validateQuery=false")
          else:
-            req = urllib2.Request(target + "&maxResults=10000" + fields + offset + "&validateQuery=false")
+            req = urllib2.Request(target + "&maxResults=" + str(maxresults) + fields + offset + "&validateQuery=false")
 
       fieldtarget = jiraserver + "/rest/api/2/field"
       fieldreq = urllib2.Request(fieldtarget)
@@ -551,7 +553,7 @@ def main(changefield,comments,timestamp):
       splunk.Intersplunk.outputStreamResults(results)
       results = []
       issuecount = issuecount + len(full2['issues'])
-      if int(len(full2['issues'])) >= 1000:
+      if int(len(full2['issues'])) >= maxresults:
          main(changefield, comments, timestamp)       
       else:
          exit()
