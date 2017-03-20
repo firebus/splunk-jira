@@ -1,10 +1,11 @@
 Add-on for JIRA
 ======================
 
-This is an Add-on for JIRA.
+This is a Splunk Add-on for JIRA.
 
-* Download from https://www.github.com/firebus/splunk-jira
-* Upgoat at http://apps.splunk.com/app/1438/
+## Status
+
+I am no longer maintaining this app. The version in this repository is older than the newest version available at http://apps.splunk.com/app/1438/. Any bug reports or support requests should probably be made on answers.splunk.com.
 
 ## Commands
 
@@ -173,14 +174,9 @@ Configure which keys to display in the table with the keys, time_keys, and custo
 
 ## Acknowledgements
 
-* App maintained by Russell Uman
+* ~~App maintained by Russell Uman~~
 * jirarest command written by Fred de Boer
 * jirasoap command written by Fred de Boer
 * jiraxml command written by Stephen Sorkin and Jeffrey Isenberg
 * The Splunk MySQL app was used as a model, and lots of snippets here were stolen from its commands
 * To support the jirasoap command, this App redistributes suds 4.0 https://fedorahosted.org/suds/
-
-## Support
-
-Please open an issue on github if you have any trouble with the app, or contact the maintainer through github.
-Please feel free to fork and make pull requests if you find a bug that you can fix or have an enhancement to add.
